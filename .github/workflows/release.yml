@@ -1,9 +1,9 @@
-name: Publish Core Package
+name: Publish Form Package
 
 on:
   push:
     tags:
-      - "core@*"
+      - "form@*"
 
 jobs:
   publish:
