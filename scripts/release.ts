@@ -12,7 +12,9 @@ release({
   toTag: (pkg, version) => `${pkg}@${version}`,
   logChangelog: () => {},
   generateChangelog: async (pkgName) => {
-    const args = ["--lerna-package", `@furiosa/${pkgName}`];
+    const args = ["conventional-changelog", "-p", "angular", "-i", "CHANGELOG.md", "-s", "--commit-path", "."];
+
+    args.push("--lerna-package", `@furiosa/${pkgName}`);
 
     await run("npx", args, { cwd: `packages/${pkgName}` });
   },

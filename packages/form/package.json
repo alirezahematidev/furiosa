@@ -1,20 +1,46 @@
 {
   "name": "@furiosa/form",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "type": "module",
   "license": "MIT",
   "author": "Alireza Hemati",
+  "main": "./dist/main.es.js",
+  "types": "./dist/main.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/main.d.ts",
+        "default": "./dist/main.es.js"
+      }
+    }
+  },
   "files": [
     "dist"
   ],
   "scripts": {
     "build": "tsc && vite build"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alirezahematidev/furiosa.git"
+  },
+  "bugs": {
+    "url": "https://github.com/alirezahematidev/furiosa/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "homepage": "https://github.com/alirezahematidev/furiosa#readme",
   "dependencies": {
     "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "react-dom": "^18.3.1",
+    "@legendapp/state": "3.0.0-alpha.14",
+    "ulidx": "^2.3.0",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
+    "@types/react": "^18.2.66",
+    "@types/react-dom": "^18.2.22",
     "@vitejs/plugin-react": "^4.3.1",
     "vite-plugin-dts": "^3.9.1",
     "rollup-plugin-esbuild": "^6.1.1",
