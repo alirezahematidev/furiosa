@@ -2,15 +2,16 @@
   "name": "@furiosa/form",
   "version": "0.0.1",
   "type": "module",
+  "sideEffects": false,
   "license": "MIT",
   "author": "Alireza Hemati",
-  "main": "./dist/main.es.js",
+  "main": "./dist/main.js",
   "types": "./dist/main.d.ts",
   "exports": {
     ".": {
       "import": {
         "types": "./dist/main.d.ts",
-        "default": "./dist/main.es.js"
+        "default": "./dist/main.js"
       }
     }
   },
@@ -18,7 +19,7 @@
     "dist"
   ],
   "scripts": {
-    "build": "tsc && vite build"
+    "build": "tsc && npx tsup"
   },
   "repository": {
     "type": "git",

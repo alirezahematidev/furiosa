@@ -10,8 +10,11 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
+    "sourceMap": true,
+    "declaration": true,
+    "declarationMap": false,
     "strict": true,
-    "jsx": "react-jsx",
+    "jsx": "preserve",
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true
