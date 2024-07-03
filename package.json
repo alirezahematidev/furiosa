@@ -9,9 +9,7 @@
   "scripts": {
     "preinstall": "npx only-allow pnpm",
     "format": "prettier --write --cache .",
-    "serve:tracer": "pnpm -r --filter='./packages/tracer' run trace",
     "build:form": "pnpm -r --filter='./packages/form' run build",
-    "build:tracer": "pnpm -r --filter='./packages/tracer' run build",
     "build": "pnpm -r --parallel --filter='./packages/*' run build",
     "release": "pnpm build && tsx scripts/release.ts"
   },
