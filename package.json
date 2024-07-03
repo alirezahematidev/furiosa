@@ -34,8 +34,7 @@
   },
   "pnpm": {
     "overrides": {
-      "@furiosa/form": "workspace:*",
-      "glob": "^10.4.2"
+      "@furiosa/form": "workspace:*"
     }
   }
 }
