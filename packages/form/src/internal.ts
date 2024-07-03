@@ -33,6 +33,7 @@ export class _Internal<T extends TData> {
     private readonly error$: Observable<FormError<T>>,
     private readonly status$: ObservableObject<FormStatus>,
     private readonly validator: ValidatorCreator<T> | undefined,
+    private readonly trace: (<T>(data: T) => void) | undefined,
     private readonly revalidateMode: RevalidateMode,
   ) {}
 
@@ -160,6 +161,8 @@ export class _Internal<T extends TData> {
     const current = deepObserve(this.table$, field);
 
     current.set(value);
+
+    if (this.trace) this.trace(value);
 
     if (this.revalidateMode === 'change') {
       this.dispose = current.onChange(this.trigger(field, this.dispose), {

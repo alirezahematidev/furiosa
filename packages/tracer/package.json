@@ -1,0 +1,35 @@
+{
+  "name": "@furiosa/tracer",
+  "version": "0.0.0",
+  "type": "module",
+  "files": [
+    "dist",
+    "dashboard",
+    "bin"
+  ],
+  "main": "./dist/main.js",
+  "types": "./dist/main.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/main.d.ts",
+        "default": "./dist/main.js"
+      }
+    }
+  },
+  "scripts": {
+    "build": "tsc && tsup",
+    "trace": "tsx src/server.ts"
+  },
+  "dependencies": {
+    "ws": "^8.18.0",
+    "express": "^4.19.2"
+  },
+  "devDependencies": {
+    "@types/ws": "^8.5.10",
+    "@types/express": "^4.17.21"
+  },
+  "bin": {
+    "trace": "./bin/index.js"
+  }
+}

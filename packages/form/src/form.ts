@@ -26,6 +26,7 @@ interface FormOptions<T extends TData> {
    * @todo `focus` and `blur` modes are not implemented yet
    */
   revalidateMode?: RevalidateMode;
+  bridge?: () => (<T>(data: T) => void) | undefined;
 }
 
 export class FormApi<T extends TData> {
@@ -39,10 +40,14 @@ export class FormApi<T extends TData> {
 
   private initialValues: T;
 
+  private trace: (<T>(data: T) => void) | undefined;
+
   constructor(options: FormOptions<T>) {
-    const { defaultValues, validator, revalidateMode = 'submit' } = options;
+    const { defaultValues, validator, bridge, revalidateMode = 'submit' } = options;
 
     this._bind();
+
+    if (bridge) this.trace = bridge();
 
     const syncDefaultValues = isFunction(defaultValues) ? ({} as T) : defaultValues;
 
@@ -60,7 +65,7 @@ export class FormApi<T extends TData> {
       isLoading: false,
     });
 
-    this._internal = new _Internal<T>(this.table$, this.error$, this.status$, validator, revalidateMode);
+    this._internal = new _Internal<T>(this.table$, this.error$, this.status$, validator, this.trace, revalidateMode);
   }
 
   static createConnector<U extends TData>() {
