@@ -1,4 +1,4 @@
-import { cloneElement } from 'react'
+import * as React from 'react'
 import { Observable, ObservableObject, isFunction, observable } from '@legendapp/state'
 import type {
   DeepArrayPath,
@@ -163,7 +163,7 @@ export class FormApi<T extends TData> {
 
       if (isFunction(Field)) return Field(propsWithApi)
 
-      return cloneElement(Field, { ...propsWithApi, ref: null })
+      return React.cloneElement(Field, { ...propsWithApi, ref: null })
     })
   }
 }

@@ -1,6 +1,6 @@
-import { Ref, useCallback } from 'react'
+import * as React from 'react'
 
-type PossibleRef<T> = Ref<T> | undefined
+type PossibleRef<T> = React.Ref<T> | undefined
 
 function assignRef<T>(ref: PossibleRef<T>, value: T) {
   if (typeof ref === 'function') {
@@ -18,5 +18,5 @@ function mergeRefs<T>(...refs: PossibleRef<T>[]) {
 
 export function useMergedRef<T>(...refs: PossibleRef<T>[]) {
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  return useCallback(mergeRefs(...refs), refs)
+  return React.useCallback(mergeRefs(...refs), refs)
 }

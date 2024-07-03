@@ -1,6 +1,6 @@
 import { isFunction } from '@legendapp/state'
 import { Show } from '@legendapp/state/react'
-import { memo } from 'react'
+import * as React from 'react'
 
 type RenderWhen<T> = T | null | boolean | undefined
 
@@ -18,6 +18,6 @@ function Render<T>({ children, when, fallback = null }: RenderProps<T>) {
   )
 }
 
-const MemoizedRender = memo(Render) as typeof Render
+const MemoizedRender = React.memo(Render) as typeof Render
 
 export { MemoizedRender as Render }

@@ -19,7 +19,7 @@
     "dist"
   ],
   "scripts": {
-    "build": "tsc && npx tsup"
+    "build": "tsc && tsup"
   },
   "repository": {
     "type": "git",

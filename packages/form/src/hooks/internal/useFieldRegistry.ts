@@ -1,7 +1,7 @@
 import { Hook } from '../../hook'
 import { DeepArrayPath, TData } from '../../types'
 import { Observable } from '@legendapp/state'
-import { useEffect } from 'react'
+import * as React from 'react'
 
 type UseFieldRegistryProps<T extends TData, TPath extends DeepArrayPath<T>> = {
   name: TPath
@@ -11,7 +11,7 @@ type UseFieldRegistryProps<T extends TData, TPath extends DeepArrayPath<T>> = {
 }
 
 export const useFieldRegistry = <T extends TData, TPath extends DeepArrayPath<T>>({ hook, name, shouldUnregister, binding$ }: UseFieldRegistryProps<T, TPath>) => {
-  useEffect(() => {
+  React.useEffect(() => {
     const dispose = binding$.onChange(({ value }) => {
       console.log('hhhhiiii', value)
       if (typeof value !== 'boolean') return

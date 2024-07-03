@@ -1,4 +1,4 @@
-import { ReactElement } from 'react'
+import * as React from 'react'
 import type { ZodArray, ZodObject, ZodRawShape, ZodType, z } from 'zod'
 
 type OneOf<T extends any[]> = T extends [infer R, ...infer Rest] ? R | OneOf<Rest> : never
@@ -258,7 +258,7 @@ export type BindFunction<T extends TData> = (fields: FieldValues<T>) => boolean 
 
 interface BaseFieldProps<T extends TData, TPath extends DeepArrayPath<T>> {
   name: TPath
-  render: ((options: RenderOptions<T, TPath>, fields: FieldValues<T>) => NullishElement) | ReactElement<Partial<RenderOptions<T, TPath>>>
+  render: ((options: RenderOptions<T, TPath>, fields: FieldValues<T>) => NullishElement) | React.ReactElement<Partial<RenderOptions<T, TPath>>>
   ref?: RefCallback
 }
 

@@ -4,7 +4,7 @@ import { defineConfig } from 'tsup'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
-const external = ['react', 'react/jsx-runtime', 'react-dom', 'zod', 'ulidx', '@legendapp/state', '@legendapp/state/react']
+const external = ['react', 'react-dom', 'zod', 'ulidx', '@legendapp/state', '@legendapp/state/react']
 
 export default defineConfig({
   entry: {

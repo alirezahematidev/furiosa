@@ -12,7 +12,7 @@ import type {
   TData,
   ValidatorCreator,
 } from './types'
-import { SyntheticEvent } from 'react'
+import * as React from 'react'
 import { deepObserve, getValidErrors, setPathValue } from './utils'
 import { parseSchemaValidator } from './validator'
 import { getArray } from './helpers'
@@ -93,7 +93,7 @@ export class _Internal<T extends TData> {
   }
 
   public submit(onResolve: (data: T) => void | Promise<void>, onReject?: (errors: FormError<T>) => void | Promise<void>) {
-    return async (event?: SyntheticEvent<any>) => {
+    return async (event?: React.SyntheticEvent<any>) => {
       if (event && 'preventDefault' in event) event.preventDefault()
 
       await this.revalidate('submit')
