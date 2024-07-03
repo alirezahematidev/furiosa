@@ -1,10 +1,10 @@
-import path from 'node:path'
-import { fileURLToPath } from 'node:url'
-import { defineConfig } from 'tsup'
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { defineConfig } from 'tsup';
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url))
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-const external = ['react', 'react-dom', 'zod', 'ulidx', '@legendapp/state', '@legendapp/state/react']
+const external = ['react', 'react-dom', 'zod', 'ulidx', '@legendapp/state', '@legendapp/state/react'];
 
 export default defineConfig({
   entry: {
@@ -17,4 +17,4 @@ export default defineConfig({
   splitting: false,
   clean: true,
   minify: true,
-})
+});

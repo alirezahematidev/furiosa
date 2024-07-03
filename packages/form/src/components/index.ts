@@ -1,2 +1,2 @@
-export * from './field'
-export * from './render'
+export * from './field';
+export * from './render';
