@@ -221,7 +221,7 @@ export type WithIdentifier<Key extends string = 'id'> = {
 
 export type FieldArrayWithIdentifier<T extends TData, TPath extends ArrayPath<T>, Key extends string = 'id'> = FieldArrayValues<T, TPath> & WithIdentifier<Key>;
 
-export interface UseFieldArrayOptions<T extends TData, TPath extends ArrayPath<T>, Key extends string = 'id'> {
+export interface UseFormArrayOptions<T extends TData, TPath extends ArrayPath<T>, Key extends string = 'id'> {
   readonly name: TPath;
   readonly connect: Connect<T>;
   key?: Key;
@@ -229,7 +229,7 @@ export interface UseFieldArrayOptions<T extends TData, TPath extends ArrayPath<T
   disabled?: boolean;
 }
 
-export type UseFieldArrayReturn<T extends TData, TPath extends ArrayPath<T>, Key extends string = 'id'> = {
+export type UseFormArrayReturn<T extends TData, TPath extends ArrayPath<T>, Key extends string = 'id'> = {
   fields: FieldArrayWithIdentifier<T, TPath, Key>[];
 
   append: (value: ArrayLikeValue<T, TPath>) => void;

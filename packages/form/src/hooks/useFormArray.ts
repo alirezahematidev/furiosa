@@ -1,12 +1,12 @@
-import type { ArrayPath, ArrayPathValue, FieldArrayWithIdentifier, TData, UseFieldArrayOptions, UseFieldArrayReturn, WithIdentifier } from '../types';
+import type { ArrayPath, ArrayPathValue, FieldArrayWithIdentifier, TData, UseFormArrayOptions, UseFormArrayReturn, WithIdentifier } from '../types';
 import { useMountOnce, useSelector } from '@legendapp/state/react';
 import * as React from 'react';
 import { ulid } from 'ulidx';
 import { Provider } from '../provider';
 
-function useFieldArray<T extends TData, TPath extends ArrayPath<T>, const Key extends string = 'id'>(
-  options: UseFieldArrayOptions<T, TPath, Key>,
-): UseFieldArrayReturn<T, TPath, Key> {
+function useFormArray<T extends TData, TPath extends ArrayPath<T>, const Key extends string = 'id'>(
+  options: UseFormArrayOptions<T, TPath, Key>,
+): UseFormArrayReturn<T, TPath, Key> {
   const { connect, name, key = 'id', initialValues, disabled } = options;
 
   const { _select, ...methods } = React.useMemo(() => new Provider<T>(connect).array({ name, disabled }), [connect, disabled, name]);
@@ -29,4 +29,4 @@ function useFieldArray<T extends TData, TPath extends ArrayPath<T>, const Key ex
   return { fields, ...methods };
 }
 
-export { useFieldArray };
+export { useFormArray };
