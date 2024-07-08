@@ -1,6 +1,6 @@
-import { isFunction } from '@legendapp/state';
-import { Show } from '@legendapp/state/react';
 import * as React from 'react';
+import { Show } from '@legendapp/state/react';
+import { isFunction } from '../../utils';
 
 type RenderWhen<T> = T | null | boolean | undefined;
 
@@ -10,7 +10,9 @@ interface RenderProps<T> {
   children: React.ReactNode;
 }
 
-function Render<T>({ children, when, fallback = null }: RenderProps<T>) {
+function Render<T>(props: RenderProps<T>) {
+  const { children, when, fallback = null } = props;
+
   return (
     <Show if={isFunction(when) ? when() : when} else={fallback}>
       {() => children}
@@ -19,5 +21,7 @@ function Render<T>({ children, when, fallback = null }: RenderProps<T>) {
 }
 
 const MemoizedRender = React.memo(Render) as typeof Render;
+
+export type { RenderProps };
 
 export { MemoizedRender as Render };

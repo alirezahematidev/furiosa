@@ -11,4 +11,6 @@ function Field<T extends TData, TPath extends DeepArrayPath<T>>(props: FieldProp
 
 const MemoizedField = React.memo(Field) as typeof Field;
 
+export type { FieldProps };
+
 export { MemoizedField as Field };

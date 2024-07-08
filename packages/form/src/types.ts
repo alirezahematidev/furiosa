@@ -1,6 +1,8 @@
 import * as React from 'react';
 import type { ZodArray, ZodObject, ZodRawShape, ZodType, z } from 'zod';
 
+type Z = typeof z;
+
 type OneOf<T extends any[]> = T extends [infer R, ...infer Rest] ? R | OneOf<Rest> : never;
 
 type AllOf<T extends any[]> = T extends [infer R, ...infer Rest] ? R & AllOf<Rest> : unknown;
@@ -17,7 +19,7 @@ export type TransformFieldValues<T extends TData, TPaths extends Array<DeepArray
   readonly [K in Underscore<TPaths[number]>]: DeepArrayPathValue<T, Chain<K>>;
 };
 
-export enum ApiSymbol {
+export enum ConnectSymbol {
   GET = 'GET',
   SET = 'SET',
   PEEK = 'PEEK',
@@ -38,6 +40,8 @@ export type FormStatusType = 'isLoading' | 'isSubmitting' | 'isValidating';
 export type FormStatus = {
   [type in FormStatusType]: boolean;
 };
+
+export type Event = { target: any };
 
 export type FormState = Map<string, { disabled: boolean }>;
 
@@ -158,8 +162,8 @@ export type ValidatorSchema<T extends TData> = {
     : never;
 };
 
-export type ZodValidators = {
-  [K in keyof typeof z]: (typeof z)[K];
+export type ZodValidator = {
+  [K in keyof Z]: Z[K];
 };
 
 export type SchemaValidatorOptions<T extends TData> = {
@@ -169,7 +173,7 @@ export type SchemaValidatorOptions<T extends TData> = {
   validator?: ValidatorCreator<T>;
 };
 
-export type ValidatorCreator<T extends TData> = (validator: ZodValidators, getFields: FieldValues<T>) => Promise<ValidatorSchema<T>>;
+export type ValidatorCreator<T extends TData> = (z: ZodValidator, getFields: FieldValues<T>) => Promise<ValidatorSchema<T>>;
 
 export type FieldValues<T extends TData> = <TPath extends DeepArrayPath<T>>(field: TPath) => DeepArrayPathValue<T, TPath>;
 
@@ -196,9 +200,9 @@ export type StatusFunction = (state?: FormStatusType) => FormStatus | boolean;
 
 export type ErrorFunction<T extends TData> = <TPath extends Path<T>>(field?: TPath) => TPath extends never ? FormError<T> : ErrorResult<T, TPath>;
 
-type ApiExpose<T extends TData> = OneOf<[GetFunction<T>, SetFunction<T>, ErrorFunction<T>, FieldArray<T>, Registry<T>, RevalidateFunction, StatusFunction]>;
+type ConnectExpose<T extends TData> = OneOf<[GetFunction<T>, SetFunction<T>, ErrorFunction<T>, FieldArray<T>, Registry<T>, RevalidateFunction, StatusFunction]>;
 
-export type Api<T extends TData> = Record<symbol, ApiExpose<T>>;
+export type Connect<T extends TData> = Record<symbol, ConnectExpose<T>>;
 
 export type FieldArrayParams<T, TPath extends ArrayPath<T> = ArrayPath<T>> = {
   readonly name: TPath;
@@ -217,15 +221,15 @@ export type WithIdentifier<Key extends string = 'id'> = {
 
 export type FieldArrayWithIdentifier<T extends TData, TPath extends ArrayPath<T>, Key extends string = 'id'> = FieldArrayValues<T, TPath> & WithIdentifier<Key>;
 
-export interface UseFieldArrayOptions<T extends TData, TPath extends ArrayPath<T>, Key extends string = 'id'> {
+export interface UseFormArrayOptions<T extends TData, TPath extends ArrayPath<T>, Key extends string = 'id'> {
   readonly name: TPath;
-  readonly api: Api<T>;
+  readonly connect: Connect<T>;
   key?: Key;
   initialValues?: WithInferredArray<ArrayPathValue<T, TPath>>;
   disabled?: boolean;
 }
 
-export type UseFieldArrayReturn<T extends TData, TPath extends ArrayPath<T>, Key extends string = 'id'> = {
+export type UseFormArrayReturn<T extends TData, TPath extends ArrayPath<T>, Key extends string = 'id'> = {
   fields: FieldArrayWithIdentifier<T, TPath, Key>[];
 
   append: (value: ArrayLikeValue<T, TPath>) => void;
@@ -263,22 +267,22 @@ interface BaseFieldProps<T extends TData, TPath extends DeepArrayPath<T>> {
 }
 
 export interface FieldProps<T extends TData, TPath extends DeepArrayPath<T>> extends BaseFieldProps<T, TPath> {
-  readonly api: Api<T>;
+  readonly connect: Connect<T>;
   bindTo?: BindFunction<T>;
   shouldUnregister?: boolean;
 }
 
-type ConnectorProps<T extends TData, TPath extends DeepArrayPath<T>> = {
-  _connect: boolean;
+type BridgeProps<T extends TData, TPath extends DeepArrayPath<T>> = {
+  readonly _bridge: boolean;
   disconnect?: DisconnectFunction<T, TPath>;
 };
 
 type DisconnectFunction<T extends TData, TPath extends DeepArrayPath<T>> = (value: DeepArrayPathValue<T, TPath>) => boolean;
 
-type FieldPropsWithDisconnect<T extends TData, TPath extends DeepArrayPath<T>, Connect> = true extends Connect ? Pick<ConnectorProps<T, TPath>, 'disconnect'> : object;
+type FieldPropsWithDisconnect<T extends TData, TPath extends DeepArrayPath<T>, Bridge> = true extends Bridge ? Pick<BridgeProps<T, TPath>, 'disconnect'> : object;
 
-type FieldOmittedProps<T extends TData, TPath extends DeepArrayPath<T>, Connect> = true extends Connect ? BaseFieldProps<T, TPath> : Omit<FieldProps<T, TPath>, 'api'>;
+type FieldOmittedProps<T extends TData, TPath extends DeepArrayPath<T>, Bridge> = true extends Bridge ? BaseFieldProps<T, TPath> : Omit<FieldProps<T, TPath>, 'connect'>;
 
-export type FieldPropsWithConnector<T extends TData, TPath extends DeepArrayPath<T>> = FieldProps<T, TPath> & ConnectorProps<T, TPath>;
+export type FieldPropsWithConnector<T extends TData, TPath extends DeepArrayPath<T>> = FieldProps<T, TPath> & BridgeProps<T, TPath>;
 
-export type SetupFieldComponentProps<T extends TData, TPath extends DeepArrayPath<T>, Connect> = FieldOmittedProps<T, TPath, Connect> & FieldPropsWithDisconnect<T, TPath, Connect>;
+export type SetupFieldComponentProps<T extends TData, TPath extends DeepArrayPath<T>, Bridge> = FieldOmittedProps<T, TPath, Bridge> & FieldPropsWithDisconnect<T, TPath, Bridge>;

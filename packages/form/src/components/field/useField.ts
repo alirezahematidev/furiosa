@@ -1,34 +1,32 @@
 import * as React from 'react';
-import { isFunction } from '@legendapp/state';
 import { useObservable } from '@legendapp/state/react';
-import { NOOP } from '../../helpers';
-import { getEventValue } from '../../utils';
-import { Hook } from '../../hook';
+import { getEventValue, isFunction, NOOP } from '../../utils';
 import { useMergedRef } from './useMergeRefs';
 import type { DeepArrayPath, FieldProps, FieldPropsWithConnector, TData } from '../../types';
+import { Provider } from '../../provider';
 
 function extractConnectorProps<T extends TData, TPath extends DeepArrayPath<T>>(props: FieldProps<T, TPath>) {
-  const { _connect, disconnect } = props as FieldPropsWithConnector<T, TPath>;
+  const { _bridge, disconnect } = props as FieldPropsWithConnector<T, TPath>;
 
-  return { _connect, disconnect };
+  return { _bridge, disconnect };
 }
 
 export function useField<T extends TData, TPath extends DeepArrayPath<T>>(props: FieldProps<T, TPath>) {
-  const { api, name, bindTo, shouldUnregister, render } = props;
+  const { connect, name, bindTo, shouldUnregister, render } = props;
 
-  const { _connect, disconnect } = extractConnectorProps(props);
+  const { _bridge, disconnect } = extractConnectorProps(props);
 
   const innerRef = React.useRef<HTMLInputElement>(null);
 
-  const hook = React.useMemo(() => new Hook<T>(api), [api]);
+  const hook = React.useMemo(() => new Provider<T>(connect), [connect]);
 
   const binding$ = useObservable(() => {
     let binding = bindTo;
 
-    if (_connect) binding = (fields) => fields(name);
+    if (_bridge) binding = (fields) => fields(name);
 
     return binding ? binding(hook.get) : false;
-  }, [bindTo, name, _connect]);
+  }, [bindTo, name, _bridge]);
 
   const callbackRef = React.useCallback((node: HTMLInputElement) => {
     if (!node) return;
@@ -40,11 +38,11 @@ export function useField<T extends TData, TPath extends DeepArrayPath<T>>(props:
     const dispose = binding$.onChange(({ value }) => {
       if (typeof value !== 'boolean') return;
 
-      hook[value ? 'unregister' : 'register'](name, _connect || shouldUnregister);
+      hook[value ? 'unregister' : 'register'](name, _bridge || shouldUnregister);
     });
 
     return dispose;
-  }, [hook, name, _connect, shouldUnregister, binding$]);
+  }, [hook, name, _bridge, shouldUnregister, binding$]);
 
   const onChange = React.useCallback((event: any) => React.startTransition(() => hook.set(name, getEventValue(event))), [hook, name]);
 
@@ -55,7 +53,7 @@ export function useField<T extends TData, TPath extends DeepArrayPath<T>>(props:
   return () => {
     const value = hook.get(name);
 
-    if (_connect && (isFunction(disconnect) ? disconnect(value) : value)) return undefined;
+    if (_bridge && (isFunction(disconnect) ? disconnect(value) : value)) return undefined;
 
     const options = { value, name, ref, onChange };
 

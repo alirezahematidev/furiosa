@@ -9,13 +9,13 @@ import type {
   FormStatus,
   FormStatusType,
   RevalidateMode,
+  SchemaValidatorOptions,
   TData,
   ValidatorCreator,
 } from './types';
 import * as React from 'react';
-import { deepObserve, getValidErrors, setPathValue } from './utils';
-import { parseSchemaValidator } from './validator';
-import { getArray } from './helpers';
+import { arraysEqual, deepObserve, getArray, getValidErrors, isFunction, isObject, setFieldErrorMessage, setPathValue } from './utils';
+import { ZodRawShape, z } from 'zod';
 
 export class _Internal<T extends TData> {
   private unregisteredFields: Set<string> = new Set();
@@ -23,8 +23,6 @@ export class _Internal<T extends TData> {
   private history: FormHistory = new Map();
 
   private dispose: ObservableListenerDispose | null = null;
-
-  private fieldNodes: Map<string, HTMLElement> = new Map();
 
   private readonly EMPTY_STRING = '';
 
@@ -48,6 +46,40 @@ export class _Internal<T extends TData> {
     return this.get.bind(this) as FieldValues<T>;
   }
 
+  private async parseSchemaValidator<T extends TData>({ data, keys, validator, getFields }: SchemaValidatorOptions<T>) {
+    try {
+      if (!validator || !isFunction(validator)) return null;
+
+      const validators = await validator(z, getFields);
+
+      const { success, error } = await z.object(validators as ZodRawShape).safeParseAsync(data);
+
+      if (success) return null;
+
+      if (keys.length === 0) {
+        const fieldErrors = error.flatten().fieldErrors;
+
+        if (isObject(fieldErrors)) return getValidErrors(error.flatten().fieldErrors);
+
+        return fieldErrors;
+      }
+
+      const issue = error.issues.find(({ path }) => arraysEqual(path, keys));
+
+      if (!issue) return null;
+
+      const fieldErrorMessage = setFieldErrorMessage(issue)[keys[0]];
+
+      if (isObject(fieldErrorMessage)) return getValidErrors(fieldErrorMessage);
+
+      return fieldErrorMessage;
+    } catch (error) {
+      console.error(error);
+
+      return null;
+    }
+  }
+
   private trigger<TPath extends string>(field: TPath, dispose: ObservableListenerDispose | null) {
     const keys = field.split('.');
 
@@ -58,7 +90,7 @@ export class _Internal<T extends TData> {
 
       this.status$.isValidating.set(true);
 
-      const errors = await parseSchemaValidator<T>({
+      const errors = await this.parseSchemaValidator<T>({
         data,
         keys,
         validator: this.validator,
@@ -80,7 +112,7 @@ export class _Internal<T extends TData> {
 
     this.status$.isValidating.set(true);
 
-    const errors = await parseSchemaValidator<T>({
+    const errors = await this.parseSchemaValidator<T>({
       data,
       keys: [],
       validator: this.validator,
@@ -120,8 +152,6 @@ export class _Internal<T extends TData> {
 
   public unregister<TPath extends string>(field: TPath, shouldUnregister?: boolean) {
     this.unregisteredFields.add(field);
-
-    this.fieldNodes.delete(field);
 
     const current = deepObserve(this.table$, field);
 
