@@ -13,6 +13,18 @@
         "types": "./dist/main.d.ts",
         "default": "./dist/main.js"
       }
+    },
+    "./hooks": {
+      "import": {
+        "types": "./dist/hooks.d.ts",
+        "default": "./dist/hooks.js"
+      }
+    },
+    "./components": {
+      "import": {
+        "types": "./dist/components.d.ts",
+        "default": "./dist/components.js"
+      }
     }
   },
   "files": [
@@ -40,7 +52,7 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
-    "@types/react": "^18.2.66",
+    "@types/react": "^18.3.3",
     "@types/react-dom": "^18.2.22"
   }
 }
