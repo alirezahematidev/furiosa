@@ -10,6 +10,7 @@
     "preinstall": "npx only-allow pnpm",
     "format": "prettier --write --cache .",
     "build:form": "pnpm -r --filter='./packages/form' run build",
+    "build:swag": "pnpm -r --filter='./packages/swag' run build",
     "build": "pnpm -r --parallel --filter='./packages/*' run build",
     "release": "pnpm build && tsx scripts/release.ts"
   },
@@ -31,7 +32,8 @@
   },
   "pnpm": {
     "overrides": {
-      "@furiosa/form": "workspace:*"
+      "@furiosa/form": "workspace:*",
+      "@furiosa/swag": "workspace:*"
     }
   }
 }

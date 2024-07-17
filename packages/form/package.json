@@ -31,7 +31,7 @@
     "dist"
   ],
   "scripts": {
-    "build": "tsc && tsup"
+    "build": "tsc --noEmit && tsup"
   },
   "repository": {
     "type": "git",
