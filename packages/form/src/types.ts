@@ -169,11 +169,10 @@ export type ZodValidator = {
 export type SchemaValidatorOptions<T extends TData> = {
   data: T;
   keys: Array<string>;
-  getFields: FieldValues<T>;
   validator?: ValidatorCreator<T>;
 };
 
-export type ValidatorCreator<T extends TData> = (z: ZodValidator, getFields: FieldValues<T>) => Promise<ValidatorSchema<T>>;
+export type ValidatorCreator<T extends TData> = (z: ZodValidator) => Promise<ValidatorSchema<T>>;
 
 export type FieldValues<T extends TData> = <TPath extends DeepArrayPath<T>>(field: TPath) => DeepArrayPathValue<T, TPath>;
 
@@ -262,7 +261,7 @@ export type BindFunction<T extends TData> = (fields: FieldValues<T>) => boolean 
 
 interface BaseFieldProps<T extends TData, TPath extends DeepArrayPath<T>> {
   name: TPath;
-  render: ((options: RenderOptions<T, TPath>, fields: FieldValues<T>) => NullishElement) | React.ReactElement<Partial<RenderOptions<T, TPath>>>;
+  render: ((options: RenderOptions<T, TPath>) => NullishElement) | React.ReactElement<Partial<RenderOptions<T, TPath>>>;
   ref?: RefCallback;
 }
 
@@ -273,7 +272,7 @@ export interface FieldProps<T extends TData, TPath extends DeepArrayPath<T>> ext
 }
 
 type BridgeProps<T extends TData, TPath extends DeepArrayPath<T>> = {
-  readonly _bridge: boolean;
+  readonly _bridge?: boolean;
   disconnect?: DisconnectFunction<T, TPath>;
 };
 
@@ -283,6 +282,6 @@ type FieldPropsWithDisconnect<T extends TData, TPath extends DeepArrayPath<T>, B
 
 type FieldOmittedProps<T extends TData, TPath extends DeepArrayPath<T>, Bridge> = true extends Bridge ? BaseFieldProps<T, TPath> : Omit<FieldProps<T, TPath>, 'connect'>;
 
-export type FieldPropsWithConnector<T extends TData, TPath extends DeepArrayPath<T>> = FieldProps<T, TPath> & BridgeProps<T, TPath>;
+export type InternalFieldProps<T extends TData, TPath extends DeepArrayPath<T>> = FieldProps<T, TPath> & BridgeProps<T, TPath>;
 
 export type SetupFieldComponentProps<T extends TData, TPath extends DeepArrayPath<T>, Bridge> = FieldOmittedProps<T, TPath, Bridge> & FieldPropsWithDisconnect<T, TPath, Bridge>;

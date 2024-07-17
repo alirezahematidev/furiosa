@@ -68,22 +68,18 @@ export class FormApi<T extends TData> {
 
     const Field = form.setupField(true);
 
-    return { Field, get: form._bridgeGetter };
-  }
-
-  private _bridgeGetter<TPath extends DeepArrayPath<T>>(field: TPath): DeepArrayPathValue<T, TPath> {
-    return this.getValues(field, { tracking: true });
+    return { Field, get: form.watch, set: form.setValue };
   }
 
   private _bind() {
     this.getValues = this.getValues.bind(this);
+    this.watch = this.watch.bind(this);
     this.setValue = this.setValue.bind(this);
     this.hasError = this.hasError.bind(this);
     this.reset = this.reset.bind(this);
     this.resetField = this.resetField.bind(this);
     this.setupField = this.setupField.bind(this);
     this.submit = this.submit.bind(this);
-    this._bridgeGetter = this._bridgeGetter.bind(this);
   }
 
   private async resolveAsyncDefaultValues(factory: () => Promise<T>) {
@@ -122,6 +118,12 @@ export class FormApi<T extends TData> {
     return this._internal[options?.tracking ? 'get' : 'peek'](field);
   }
 
+  public watch<TPath extends DeepArrayPath<T>>(field: TPath): DeepArrayPathValue<T, TPath>;
+  public watch<TPath extends DeepArrayPath<T>>(field: Array<TPath>): Array<DeepArrayPathValue<T, TPath>>;
+  public watch<TPath extends DeepArrayPath<T>>(field: TPath) {
+    return this.getValues(field, { tracking: true });
+  }
+
   public setValue<TPath extends DeepArrayPath<T>>(field: TPath, value: DeepArrayPathValue<T, TPath>) {
     this._internal.set(field, value);
   }
@@ -146,11 +148,11 @@ export class FormApi<T extends TData> {
 
   public setupField<_Bridge extends boolean = false>(_bridge?: _Bridge) {
     return observer(<TPath extends DeepArrayPath<T>, const Bridge extends _Bridge>(props: SetupFieldComponentProps<T, TPath, Bridge>) => {
-      const propsWithApi = { ...props, connect: this.connect, _bridge };
+      const propsWithConnect = { ...props, connect: this.connect, _bridge };
 
-      if (isFunction(Field)) return Field(propsWithApi);
+      if (isFunction(Field)) return Field(propsWithConnect);
 
-      return React.cloneElement(Field, { ...propsWithApi, ref: null });
+      return React.cloneElement(Field, { ...propsWithConnect, ref: null });
     });
   }
 }

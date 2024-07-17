@@ -3,7 +3,6 @@ import type {
   ArrayLikeValue,
   ArrayPathValue,
   FieldArrayParams,
-  FieldValues,
   FormError,
   FormHistory,
   FormStatus,
@@ -42,15 +41,11 @@ export class _Internal<T extends TData> {
     return this.unregisteredFields.has(field) || this.status$.isLoading.get();
   }
 
-  private get getFields() {
-    return this.get.bind(this) as FieldValues<T>;
-  }
-
-  private async parseSchemaValidator<T extends TData>({ data, keys, validator, getFields }: SchemaValidatorOptions<T>) {
+  private async parseSchemaValidator<T extends TData>({ data, keys, validator }: SchemaValidatorOptions<T>) {
     try {
       if (!validator || !isFunction(validator)) return null;
 
-      const validators = await validator(z, getFields);
+      const validators = await validator(z);
 
       const { success, error } = await z.object(validators as ZodRawShape).safeParseAsync(data);
 
@@ -94,7 +89,6 @@ export class _Internal<T extends TData> {
         data,
         keys,
         validator: this.validator,
-        getFields: this.getFields.bind(this),
       });
 
       this.status$.isValidating.set(false);
@@ -116,7 +110,6 @@ export class _Internal<T extends TData> {
       data,
       keys: [],
       validator: this.validator,
-      getFields: this.getFields.bind(this),
     });
 
     this.status$.isValidating.set(false);

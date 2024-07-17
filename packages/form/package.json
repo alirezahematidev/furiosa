@@ -4,6 +4,7 @@
   "type": "module",
   "sideEffects": false,
   "license": "MIT",
+  "description": "A lightweight observable form management powered by @legendapp/state",
   "author": "Alireza Hemati",
   "main": "./dist/main.js",
   "types": "./dist/main.d.ts",
@@ -27,6 +28,11 @@
       }
     }
   },
+  "keywords": [
+    "form",
+    "observable",
+    "react"
+  ],
   "files": [
     "dist"
   ],

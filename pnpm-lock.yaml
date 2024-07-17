@@ -7,6 +7,7 @@ settings:
 overrides:
   '@furiosa/form': workspace:*
   '@furiosa/swag': workspace:*
+  '@furiosa/eslint-plugin-atomic': workspace:*
 
 importers:
 
@@ -30,6 +31,24 @@ importers:
       typescript:
         specifier: ^5.5.3
         version: 5.5.3
+
+  packages/eslint-plugin-atomic:
+    devDependencies:
+      '@types/eslint':
+        specifier: ^8.56.10
+        version: 8.56.10
+      '@types/estree':
+        specifier: 1.0.5
+        version: 1.0.5
+      '@typescript-eslint/eslint-plugin':
+        specifier: ^7.16.1
+        version: 7.16.1(@typescript-eslint/parser@7.16.1)(eslint@9.7.0)(typescript@5.5.3)
+      '@typescript-eslint/parser':
+        specifier: ^7.16.1
+        version: 7.16.1(eslint@9.7.0)(typescript@5.5.3)
+      eslint:
+        specifier: ^9.7.0
+        version: 9.7.0
 
   packages/form:
     dependencies:
@@ -864,6 +883,13 @@ packages:
       '@types/ms': 0.7.34
     dev: true
 
+  /@types/eslint@8.56.10:
+    resolution: {integrity: sha512-Shavhk87gCtY2fhXDctcfS3e6FdxWkCx1iUZ9eEUbh7rTqlZT0/IzOkCOVt0fCjcFuZ9FPYfuezTBImfHCDBGQ==}
+    dependencies:
+      '@types/estree': 1.0.5
+      '@types/json-schema': 7.0.15
+    dev: true
+
   /@types/estree@1.0.5:
     resolution: {integrity: sha512-/kYRxGDLWzHOB7q+wtSUQlFrtcdUccpfy+X+9iMBpHK8QLLhx2wIPYuS5DYtR9Wa/YlZAbIovy7qVdB1Aq6Lyw==}
     dev: true
@@ -877,6 +903,10 @@ packages:
 
   /@types/js-yaml@4.0.9:
     resolution: {integrity: sha512-k4MGaQl5TGo/iipqb2UDG2UwjXziSWkh0uysQelTlJpX1qGlpUZYm8PnO4DxG1qBomtJUdYJ6qR6xdIah10JLg==}
+    dev: true
+
+  /@types/json-schema@7.0.15:
+    resolution: {integrity: sha512-5+fP8P8MFNC+AyZCDxrB2pkZFPGzqQWUzpSeuuVLvm8VMcorNYavBqoFcxK8bQz4Qsbn4oUEEem4wDLfcysGHA==}
     dev: true
 
   /@types/jsonfile@6.1.4:

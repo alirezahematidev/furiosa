@@ -2,7 +2,7 @@ import type { AwaitedFn, TData, ValidatorCreator, ValidatorSchema } from './type
 
 class Validator {
   static create<T extends TData>(validatorCreator: AwaitedFn<ValidatorCreator<T>>): ValidatorCreator<T> {
-    return (v, getFields) => new Promise<ValidatorSchema<T>>((res) => res(validatorCreator(v, getFields)));
+    return (z) => new Promise<ValidatorSchema<T>>((res) => res(validatorCreator(z)));
   }
 }
 

@@ -1,0 +1,51 @@
+{
+  "name": "@furiosa/eslint-plugin-atomic",
+  "version": "0.0.1",
+  "description": "Atomic Design architecture eslint plugin",
+  "main": "./dist/main.js",
+  "module": "./dist/main.cjs",
+  "types": "./dist/main.d.ts",
+  "type": "module",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/main.d.ts",
+        "default": "./dist/main.js"
+      },
+      "require": {
+        "types": "./dist/main.d.cts",
+        "default": "./dist/main.cjs"
+      }
+    }
+  },
+  "scripts": {
+    "build": "tsc --noEmit && tsup"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alirezahematidev/furiosa.git"
+  },
+  "keywords": [
+    "atomic design",
+    "eslint"
+  ],
+  "author": "Alireza Hemati",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/alirezahematidev/furiosa/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "homepage": "https://github.com/alirezahematidev/furiosa#readme",
+  "devDependencies": {
+    "eslint": "^9.7.0",
+    "@typescript-eslint/parser": "^7.16.1",
+    "@typescript-eslint/eslint-plugin": "^7.16.1",
+    "@types/eslint": "^8.56.10",
+    "@types/estree": "1.0.5"
+  },
+  "files": [
+    "dist"
+  ]
+}

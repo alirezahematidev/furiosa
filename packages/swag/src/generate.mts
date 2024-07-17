@@ -1,5 +1,5 @@
-import { getSwaggerConfig } from "./load.mjs";
-import { generateService } from "./utils.mjs";
+import { getSwaggerConfig } from './load.mjs';
+import { generateService } from './utils.mjs';
 
 async function generate() {
   const configs = await getSwaggerConfig();

@@ -9,7 +9,8 @@
   },
   "type": "module",
   "scripts": {
-    "build": "tsc --noEmit && tsup"
+    "build": "tsc --noEmit && tsup",
+    "generate": "node ./bin/index.mjs"
   },
   "repository": {
     "type": "git",

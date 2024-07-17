@@ -2,11 +2,11 @@ import * as React from 'react';
 import { useObservable } from '@legendapp/state/react';
 import { getEventValue, isFunction, NOOP } from '../../utils';
 import { useMergedRef } from './useMergeRefs';
-import type { DeepArrayPath, FieldProps, FieldPropsWithConnector, TData } from '../../types';
+import type { DeepArrayPath, FieldProps, InternalFieldProps, TData } from '../../types';
 import { Provider } from '../../provider';
 
-function extractConnectorProps<T extends TData, TPath extends DeepArrayPath<T>>(props: FieldProps<T, TPath>) {
-  const { _bridge, disconnect } = props as FieldPropsWithConnector<T, TPath>;
+function extractInternalProps<T extends TData, TPath extends DeepArrayPath<T>>(props: FieldProps<T, TPath>) {
+  const { _bridge, disconnect } = props as InternalFieldProps<T, TPath>;
 
   return { _bridge, disconnect };
 }
@@ -14,7 +14,7 @@ function extractConnectorProps<T extends TData, TPath extends DeepArrayPath<T>>(
 export function useField<T extends TData, TPath extends DeepArrayPath<T>>(props: FieldProps<T, TPath>) {
   const { connect, name, bindTo, shouldUnregister, render } = props;
 
-  const { _bridge, disconnect } = extractConnectorProps(props);
+  const { _bridge, disconnect } = extractInternalProps(props);
 
   const innerRef = React.useRef<HTMLInputElement>(null);
 
@@ -57,7 +57,7 @@ export function useField<T extends TData, TPath extends DeepArrayPath<T>>(props:
 
     const options = { value, name, ref, onChange };
 
-    if (isFunction(render)) return render(options, hook.get);
+    if (isFunction(render)) return render(options);
 
     return React.cloneElement(render, { ...options, ...render.props });
   };
