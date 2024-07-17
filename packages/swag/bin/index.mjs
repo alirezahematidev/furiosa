@@ -1,4 +1,4 @@
 #!/usr/bin/env node
-import { generate } from '../lib/bundle.js';
+import { generate } from '../lib/main.js';
 
 generate();
