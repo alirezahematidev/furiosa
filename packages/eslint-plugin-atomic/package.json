@@ -1,6 +1,6 @@
 {
   "name": "@furiosa/eslint-plugin-atomic",
-  "version": "0.0.1",
+  "version": "1.0.0-alpha.0",
   "description": "Atomic Design architecture eslint plugin",
   "main": "./dist/main.js",
   "module": "./dist/main.cjs",
