@@ -1,4 +1,4 @@
-name: Publish Form Package
+name: Release Form
 
 on:
   push:
@@ -7,20 +7,24 @@ on:
 
 jobs:
   publish:
+    if: github.repository == 'alirezahematidev/furiosa'
     runs-on: ubuntu-latest
     permissions:
-      contents: read
+      contents: write
       id-token: write
     environment: production-form
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "20.x"
+          node-version: 20
           registry-url: "https://registry.npmjs.org"
+          cache: "pnpm"
 
       - uses: pnpm/action-setup@v4
         name: Install pnpm
@@ -34,7 +38,7 @@ jobs:
       - name: Build Form Package
         run: pnpm build:form
 
-      - name: Release Form Package
-        run: pnpm publish --no-git-checks --publish-branch main --ignore-scripts -r --filter "@furiosa/form"
+      - name: Release
+        run: pnpm publish --no-git-checks -r --filter "@furiosa/form" --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN_FURIOSA }}
