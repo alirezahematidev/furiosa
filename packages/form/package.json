@@ -1,6 +1,6 @@
 {
   "name": "@furiosa/form",
-  "version": "1.0.0-alpha.4",
+  "version": "1.0.0-alpha.5",
   "type": "module",
   "sideEffects": false,
   "license": "MIT",
@@ -25,6 +25,12 @@
       "import": {
         "types": "./dist/components.d.ts",
         "default": "./dist/components.js"
+      }
+    },
+    "./tools": {
+      "import": {
+        "types": "./dist/tools.d.ts",
+        "default": "./dist/tools.js"
       }
     }
   },

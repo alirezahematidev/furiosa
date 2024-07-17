@@ -11,6 +11,7 @@ export default defineConfig({
     main: path.resolve(__dirname, 'src/main.ts'),
     hooks: path.resolve(__dirname, 'src/hooks/index.ts'),
     components: path.resolve(__dirname, 'src/components/index.ts'),
+    tools: path.resolve(__dirname, 'src/tools/index.ts'),
   },
   format: ['esm'],
   external,
