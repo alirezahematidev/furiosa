@@ -1,11 +1,11 @@
 import * as React from 'react';
-import { Observable, ObservableObject, isFunction, observable } from '@legendapp/state';
+import { Observable, ObservableObject, observable } from '@legendapp/state';
 import type {
+  Connect,
   DeepArrayPath,
   DeepArrayPathValue,
   FormStatus,
   Path,
-  Api,
   FormError,
   RevalidateMode,
   TData,
@@ -13,11 +13,11 @@ import type {
   SetupFieldComponentProps,
   GetValuesOptions,
 } from './types';
-import { ApiSymbol } from './types';
+import { ConnectSymbol } from './types';
 import { _Internal } from './internal';
 import { Field } from './components';
 import { observer } from '@legendapp/state/react';
-import { clone, deepObserve } from './utils';
+import { clone, deepObserve, isFunction } from './utils';
 
 interface FormOptions<T extends TData> {
   defaultValues: T | (() => Promise<T>);
@@ -63,15 +63,16 @@ export class FormApi<T extends TData> {
     this._internal = new _Internal<T>(this.table$, this.error$, this.status$, validator, revalidateMode);
   }
 
-  static createConnector<U extends TData>() {
-    const fromApi = new FormApi<U>({
-      defaultValues: {} as U,
-      revalidateMode: 'change',
-    });
+  static createBridge<U extends TData>() {
+    const form = new FormApi<U>({ defaultValues: {} as U, revalidateMode: 'change' });
 
-    const Field = fromApi.setupField(true);
+    const Field = form.setupField(true);
 
-    return { Field, get: fromApi._connections };
+    return { Field, get: form._bridgeGetter };
+  }
+
+  private _bridgeGetter<TPath extends DeepArrayPath<T>>(field: TPath): DeepArrayPathValue<T, TPath> {
+    return this.getValues(field, { tracking: true });
   }
 
   private _bind() {
@@ -82,7 +83,7 @@ export class FormApi<T extends TData> {
     this.resetField = this.resetField.bind(this);
     this.setupField = this.setupField.bind(this);
     this.submit = this.submit.bind(this);
-    this._connections = this._connections.bind(this);
+    this._bridgeGetter = this._bridgeGetter.bind(this);
   }
 
   private async resolveAsyncDefaultValues(factory: () => Promise<T>) {
@@ -100,32 +101,18 @@ export class FormApi<T extends TData> {
     }
   }
 
-  private _connections<TPath extends DeepArrayPath<T>>(field: TPath): DeepArrayPathValue<T, TPath> {
-    return this.getValues(field, { tracking: true });
-  }
-
-  public get api() {
-    const exposes: Api<T> = {};
-
-    exposes[Symbol.for(ApiSymbol.GET)] = this._internal.get.bind(this._internal);
-
-    exposes[Symbol.for(ApiSymbol.PEEK)] = this._internal.peek.bind(this._internal);
-
-    exposes[Symbol.for(ApiSymbol.SET)] = this._internal.set.bind(this._internal);
-
-    exposes[Symbol.for(ApiSymbol.ERROR)] = this._internal.error.bind(this._internal);
-
-    exposes[Symbol.for(ApiSymbol.ARRAY)] = this._internal.array.bind(this._internal);
-
-    exposes[Symbol.for(ApiSymbol.REGISTER)] = this._internal.register.bind(this._internal);
-
-    exposes[Symbol.for(ApiSymbol.UNREGISTER)] = this._internal.unregister.bind(this._internal);
-
-    exposes[Symbol.for(ApiSymbol.REVALIDATE)] = this._internal.revalidate.bind(this._internal);
-
-    exposes[Symbol.for(ApiSymbol.STATUS)] = this._internal.status.bind(this._internal);
-
-    return Object.freeze(exposes) as Api<T>;
+  public get connect(): Connect<T> {
+    return Object.freeze({
+      [Symbol.for(ConnectSymbol.GET)]: this._internal.get.bind(this._internal),
+      [Symbol.for(ConnectSymbol.PEEK)]: this._internal.peek.bind(this._internal),
+      [Symbol.for(ConnectSymbol.SET)]: this._internal.set.bind(this._internal),
+      [Symbol.for(ConnectSymbol.ERROR)]: this._internal.error.bind(this._internal),
+      [Symbol.for(ConnectSymbol.ARRAY)]: this._internal.array.bind(this._internal),
+      [Symbol.for(ConnectSymbol.REGISTER)]: this._internal.register.bind(this._internal),
+      [Symbol.for(ConnectSymbol.UNREGISTER)]: this._internal.unregister.bind(this._internal),
+      [Symbol.for(ConnectSymbol.REVALIDATE)]: this._internal.revalidate.bind(this._internal),
+      [Symbol.for(ConnectSymbol.STATUS)]: this._internal.status.bind(this._internal),
+    }) satisfies Connect<T>;
   }
 
   public getValues(options?: GetValuesOptions): T;
@@ -157,9 +144,9 @@ export class FormApi<T extends TData> {
     deepObserve(this.table$, field).set(deepObserve(clone(this.initialValues), field));
   }
 
-  public setupField<Connect extends boolean = false>(_connect?: Connect) {
-    return observer(<TPath extends DeepArrayPath<T>, const C extends Connect>(props: SetupFieldComponentProps<T, TPath, C>) => {
-      const propsWithApi = { ...props, api: this.api, _connect };
+  public setupField<_Bridge extends boolean = false>(_bridge?: _Bridge) {
+    return observer(<TPath extends DeepArrayPath<T>, const Bridge extends _Bridge>(props: SetupFieldComponentProps<T, TPath, Bridge>) => {
+      const propsWithApi = { ...props, connect: this.connect, _bridge };
 
       if (isFunction(Field)) return Field(propsWithApi);
 
