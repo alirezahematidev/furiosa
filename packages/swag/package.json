@@ -1,6 +1,6 @@
 {
   "name": "@furiosa/swag",
-  "version": "1.0.0-alpha.1",
+  "version": "1.0.0-alpha.2",
   "description": "An auto ts/js code generate from swagger/openApi",
   "main": "./dist/main.js",
   "types": "./dist/main.d.ts",
