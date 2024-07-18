@@ -6,8 +6,8 @@ Discover **Treekit**, your go-to tool for effortlessly manipulating tree data st
 
 [![Version][version-badge]][package]
 
-[version-badge]: https://img.shields.io/npm/v/@treekit/core
-[package]: https://www.npmjs.com/package/@treekit/core
+[version-badge]: https://img.shields.io/npm/v/@furiosa/tree
+[package]: https://www.npmjs.com/package/@furiosa/tree
 
 ## Documentation
 
@@ -18,7 +18,7 @@ coming soon...
 To install Treekit, run the following commands
 
 ```bash
-  npm install --save @treekit/core
+  npm install --save @furiosa/tree
 ```
 
 ## Running Tests
@@ -32,7 +32,7 @@ To run tests, run the following command
 ## Usage
 
 ```js
-import Tree from "@treekit/core";
+import Tree from "@furiosa/tree";
 
 const data = [
   // your tree data
@@ -44,7 +44,7 @@ const {insert, move, ...} = new Tree(data);
 Also you can directly import the methods to use
 
 ```js
-import {insert, move, ...} "@treekit/core/functions";
+import {insert, move, ...} "@furiosa/tree/functions";
 
 const data = [
   // your tree data
