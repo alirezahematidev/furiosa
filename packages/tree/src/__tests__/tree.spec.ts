@@ -1,5 +1,5 @@
 import { TreeNode } from '$core/index';
-import Tree from '$core/tree';
+import { Tree } from '$core/tree';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 describe('tree', async () => {

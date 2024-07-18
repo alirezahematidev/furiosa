@@ -249,4 +249,4 @@ class Tree<T extends TreeNode> implements TreeImpl<T> {
   }
 }
 
-export default Tree;
+export { Tree };

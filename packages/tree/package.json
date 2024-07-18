@@ -1,6 +1,6 @@
 {
   "name": "@furiosa/tree",
-  "version": "1.0.0-alpha.0",
+  "version": "1.0.0-alpha.1",
   "description": "A superpower tool to manage and handle nested tree data in typescript",
   "main": "./dist/main.js",
   "types": "./dist/main.d.ts",
@@ -16,6 +16,12 @@
       "import": {
         "types": "./dist/functions.d.ts",
         "default": "./dist/functions.js"
+      }
+    },
+    "./utils": {
+      "import": {
+        "types": "./dist/utils.d.ts",
+        "default": "./dist/utils.js"
       }
     }
   },

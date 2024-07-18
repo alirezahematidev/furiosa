@@ -1,4 +1,3 @@
-export { default } from './tree';
-export * from './utils';
+export * from './tree';
 
-export type { TreeNode } from './index';
+export type { TreeNode, FlatNode } from './index';
