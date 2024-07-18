@@ -64,7 +64,7 @@ function objToUrlencoded(requestBody: object) {
 `;
 
 const getHooksImports = ({ hasInfinity }: { hasInfinity?: boolean }) => `
-${hasInfinity ? `import { useMemo } from "react";` : ""}
+${hasInfinity ? `import { useMemo } from "react";` : ''}
 import { AxiosRequestConfig } from "axios";
 import {
   UseQueryOptions,
@@ -75,13 +75,13 @@ import {
     hasInfinity
       ? `  useInfiniteQuery,
   UseInfiniteQueryOptions,`
-      : ""
+      : ''
   }
   QueryClient,
   QueryKey,
 } from "@tanstack/react-query";
 import { RequestError, SwaggerResponse } from "./config";
-${hasInfinity ? `import { paginationFlattenData, getPageSize, getTotal } from "./hooksConfig";` : ""}
+${hasInfinity ? `import { paginationFlattenData, getPageSize, getTotal } from "./hooksConfig";` : ''}
 `;
 const getHooksFunctions = ({ hasInfinity }: { hasInfinity?: boolean }) =>
   hasInfinity
@@ -114,8 +114,8 @@ const useHasMore = (
   }, [pages, list, queryParams]);
 
 `
-    : "";
+    : '';
 
-const DEPRECATED_WARM_MESSAGE = "This endpoint deprecated and will be remove. Please use an alternative";
+const DEPRECATED_WARM_MESSAGE = 'This endpoint deprecated and will be remove. Please use an alternative';
 
 export { SERVICE_NEEDED_FUNCTIONS, SERVICE_BEGINNING, getHooksFunctions, getHooksImports, DEPRECATED_WARM_MESSAGE };

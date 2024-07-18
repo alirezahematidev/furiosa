@@ -1,0 +1,175 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`safeReplace > returns updated tree within replaced node that has id 1`] = `
+[
+  {
+    "children": [
+      {
+        "children": [
+          {
+            "children": [],
+            "id": "10",
+            "name": "new node",
+          },
+        ],
+        "id": "3",
+        "name": "sub-category-1",
+      },
+    ],
+    "id": "1",
+    "name": "category-1",
+  },
+  {
+    "children": [
+      {
+        "children": [],
+        "id": "4",
+        "name": "sub-category-2",
+      },
+    ],
+    "id": "2",
+    "name": "category-2",
+  },
+]
+`;
+
+exports[`safeReplace > returns updated tree within replaced node that has id 2`] = `
+[
+  {
+    "children": [
+      {
+        "children": [
+          {
+            "children": [],
+            "id": "10",
+            "name": "new node",
+          },
+        ],
+        "id": "3",
+        "name": "sub-category-1",
+      },
+    ],
+    "id": "1",
+    "name": "category-1",
+  },
+  {
+    "children": [
+      {
+        "children": [],
+        "id": "4",
+        "name": "sub-category-2",
+      },
+    ],
+    "id": "2",
+    "name": "category-2",
+  },
+]
+`;
+
+exports[`safeReplace > returns updated tree within replaced node that has not id 1`] = `
+[
+  {
+    "children": [
+      {
+        "children": [
+          {
+            "children": [],
+            "id": "5",
+            "name": "new node",
+          },
+        ],
+        "id": "3",
+        "name": "sub-category-1",
+      },
+    ],
+    "id": "1",
+    "name": "category-1",
+  },
+  {
+    "children": [
+      {
+        "children": [],
+        "id": "4",
+        "name": "sub-category-2",
+      },
+    ],
+    "id": "2",
+    "name": "category-2",
+  },
+]
+`;
+
+exports[`safeReplace > returns updated tree within replaced node that has not id 2`] = `
+[
+  {
+    "children": [
+      {
+        "children": [
+          {
+            "children": [],
+            "id": "5",
+            "name": "new node",
+          },
+        ],
+        "id": "3",
+        "name": "sub-category-1",
+      },
+    ],
+    "id": "1",
+    "name": "category-1",
+  },
+  {
+    "children": [
+      {
+        "children": [],
+        "id": "4",
+        "name": "sub-category-2",
+      },
+    ],
+    "id": "2",
+    "name": "category-2",
+  },
+]
+`;
+
+exports[`safeReplace > returns updated tree within replaced node that placed in first depth 1`] = `
+[
+  {
+    "children": [],
+    "id": "10",
+    "name": "new node",
+  },
+  {
+    "children": [
+      {
+        "children": [],
+        "id": "4",
+        "name": "sub-category-2",
+      },
+    ],
+    "id": "2",
+    "name": "category-2",
+  },
+]
+`;
+
+exports[`safeReplace > returns updated tree within replaced node that placed in first depth 2`] = `
+[
+  {
+    "children": [],
+    "id": "10",
+    "name": "new node",
+  },
+  {
+    "children": [
+      {
+        "children": [],
+        "id": "4",
+        "name": "sub-category-2",
+      },
+    ],
+    "id": "2",
+    "name": "category-2",
+  },
+]
+`;

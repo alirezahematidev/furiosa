@@ -1,4 +1,4 @@
-import { JsdocAST } from "../types.mjs";
+import { JsdocAST } from '../types.mjs';
 
 function assignToDescription(params: JsdocAST) {
   if (Object.values(params).every((v) => !v)) {
@@ -12,52 +12,52 @@ function assignToDescription(params: JsdocAST) {
       ? `
  * ${title}
  * `
-      : ""
+      : ''
   }${
     description
       ? `
  * ${description}`
-      : ""
+      : ''
   }${
     format
       ? `
  * - Format: ${format}`
-      : ""
+      : ''
   }${
     maxLength
       ? `
  * - maxLength: ${maxLength}`
-      : ""
+      : ''
   }${
     minLength
       ? `
  * - minLength: ${minLength}`
-      : ""
+      : ''
   }${
     min
       ? `
  * - min: ${min}`
-      : ""
+      : ''
   }${
     max
       ? `
  * - max: ${max}`
-      : ""
+      : ''
   }${
     minimum
       ? `
  * - minimum: ${minimum}`
-      : ""
+      : ''
   }${
     maximum
       ? `
  * - max: ${maximum}`
-      : ""
+      : ''
   }${
     pattern
       ? `
  * - pattern: ${pattern}`
-      : ""
+      : ''
   }`;
 }
 
@@ -70,26 +70,26 @@ function getJsdoc(doc: JsdocAST) {
         descriptionWithDetails
           ? `
  * ${normalizeDescription(descriptionWithDetails)}`
-          : ""
+          : ''
       }${
         doc.deprecated
           ? `
- * @deprecated ${normalizeDescription(doc.deprecated) || ""}`
-          : ""
+ * @deprecated ${normalizeDescription(doc.deprecated) || ''}`
+          : ''
       }${
         doc.example
           ? `
  * @example 
  *   ${doc.example}`
-          : ""
+          : ''
       }
  */
 `
-    : "";
+    : '';
 }
 
 function normalizeDescription(str?: string) {
-  return str?.replace(/\*\//g, "*\\/");
+  return str?.replace(/\*\//g, '*\\/');
 }
 
 export { getJsdoc };

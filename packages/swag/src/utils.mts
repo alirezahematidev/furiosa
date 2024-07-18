@@ -1,10 +1,10 @@
-import { OpenApiV2Document, OpenApiV3Document, SwagConfig, SwaggerJson } from "./types.mjs";
-import yaml from "js-yaml";
-import { getJson } from "./getJson.mjs";
-import fs from "fs-extra";
-import { transformToOpenApi } from "./utilities/swaggerToOpenApi.mjs";
-import postmanToOpenApi from "postman-to-openapi";
-import { generateJavascriptService } from "./javascript/index.mjs";
+import { OpenApiV2Document, OpenApiV3Document, SwagConfig, SwaggerJson } from './types.mjs';
+import yaml from 'js-yaml';
+import { getJson } from './getJson.mjs';
+import fs from 'fs-extra';
+import { transformToOpenApi } from './utilities/swaggerToOpenApi.mjs';
+import postmanToOpenApi from 'postman-to-openapi';
+import { generateJavascriptService } from './javascript/index.mjs';
 
 function isAscending(a: string, b: string) {
   if (a > b) {
@@ -21,9 +21,9 @@ function majorVersionsCheck(expectedV: string, inputV?: string) {
     throw new Error(`seems openApi v3/v2 does not supports your swagger json`);
   }
 
-  const expectedVMajor = expectedV.split(".")[0];
+  const expectedVMajor = expectedV.split('.')[0];
 
-  const inputVMajor = inputV.split(".")[0];
+  const inputVMajor = inputV.split('.')[0];
 
   function isValidPart(x: string) {
     return /^\d+$/.test(x);
@@ -44,7 +44,7 @@ function majorVersionsCheck(expectedV: string, inputV?: string) {
 }
 
 function isMatchWholeWord(stringToSearch: string, word: string) {
-  return new RegExp("\\b" + word + "\\b").test(stringToSearch);
+  return new RegExp('\\b' + word + '\\b').test(stringToSearch);
 }
 
 const generateService = async (config: SwagConfig) => {
@@ -55,16 +55,16 @@ const generateService = async (config: SwagConfig) => {
   try {
     let input: SwaggerJson;
 
-    if (!url) throw new Error("[SWAG] add url in your swag config file");
+    if (!url) throw new Error('[SWAG] add url in your swag config file');
 
     input = await getJson(url);
 
     if (isVersion2(input)) {
-      majorVersionsCheck("2.0.0", input.swagger);
+      majorVersionsCheck('2.0.0', input.swagger);
 
       input = await transformToOpenApi(input);
     } else if (isVersion3(input)) {
-      majorVersionsCheck("3.0.0", input.openapi);
+      majorVersionsCheck('3.0.0', input.openapi);
     } else {
       input = yaml.load(await postmanToOpenApi(JSON.stringify(input), undefined)) as SwaggerJson;
     }
@@ -76,11 +76,11 @@ const generateService = async (config: SwagConfig) => {
 };
 
 function isVersion2(input: any): input is OpenApiV2Document {
-  return "swagger" in input && typeof input["swagger"] === "string";
+  return 'swagger' in input && typeof input['swagger'] === 'string';
 }
 
 function isVersion3(input: any): input is OpenApiV3Document {
-  return "openapi" in input && typeof input["openapi"] === "string";
+  return 'openapi' in input && typeof input['openapi'] === 'string';
 }
 
 export { majorVersionsCheck, isAscending, isMatchWholeWord, generateService, isVersion2, isVersion3 };

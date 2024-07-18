@@ -1,28 +1,9 @@
-import {
-  getPathParams,
-  generateServiceName,
-  getHeaderParams,
-  getParametersInfo,
-  getRefName,
-  toPascalCase,
-} from "./utils.mjs";
-import type {
-  SwaggerRequest,
-  SwaggerJson,
-  SwaggerResponse,
-  Config,
-  ApiAST,
-  TypeAST,
-  Schema,
-  Parameter,
-  ConstantsAST,
-  Method,
-  PathItem,
-} from "../types.mjs";
-import { generateApis } from "./generateApis.mjs";
-import { generateTypes } from "./generateTypes.mjs";
-import { generateConstants } from "./generateConstants.mjs";
-import { generateHook } from "./generateHook.mjs";
+import { getPathParams, generateServiceName, getHeaderParams, getParametersInfo, getRefName, toPascalCase } from './utils.mjs';
+import type { SwaggerRequest, SwaggerJson, SwaggerResponse, Config, ApiAST, TypeAST, Schema, Parameter, ConstantsAST, Method, PathItem } from '../types.mjs';
+import { generateApis } from './generateApis.mjs';
+import { generateTypes } from './generateTypes.mjs';
+import { generateConstants } from './generateConstants.mjs';
+import { generateHook } from './generateHook.mjs';
 
 function generator(input: SwaggerJson, config: Config): { code: string; hooks: string; type: string } {
   const apis: ApiAST[] = [];
@@ -67,21 +48,18 @@ function generator(input: SwaggerJson, config: Config): { code: string; hooks: s
     Object.entries(input.paths).forEach(([endPoint, value]) => {
       const parametersExtended = value.parameters as Parameter[] | undefined;
       getModifiedPathValue(endPoint, value).forEach(([method, options]: [string, SwaggerRequest]) => {
-        if (method === "parameters") {
+        if (method === 'parameters') {
           return;
         }
 
         const { operationId, security } = options;
 
-        const allParameters =
-          parametersExtended || options.parameters
-            ? [...(parametersExtended || []), ...(options.parameters || [])]
-            : undefined;
+        const allParameters = parametersExtended || options.parameters ? [...(parametersExtended || []), ...(options.parameters || [])] : undefined;
 
         const parameters = allParameters?.map<Parameter>((parameter) => {
           const { $ref } = parameter;
           if ($ref) {
-            const name = $ref.replace("#/components/parameters/", "");
+            const name = $ref.replace('#/components/parameters/', '');
             return {
               ...input.components?.parameters?.[name]!,
               $ref,
@@ -95,20 +73,14 @@ function generator(input: SwaggerJson, config: Config): { code: string; hooks: s
 
         const pathParams = getPathParams(parameters);
 
-        const {
-          exist: isQueryParamsExist,
-          isNullable: isQueryParamsNullable,
-          params: queryParameters,
-        } = getParametersInfo(parameters, "query");
-        const queryParamsTypeName: string | false = isQueryParamsExist
-          ? `${toPascalCase(serviceName)}QueryParams`
-          : false;
+        const { exist: isQueryParamsExist, isNullable: isQueryParamsNullable, params: queryParameters } = getParametersInfo(parameters, 'query');
+        const queryParamsTypeName: string | false = isQueryParamsExist ? `${toPascalCase(serviceName)}QueryParams` : false;
 
         if (queryParamsTypeName) {
           types.push({
             name: queryParamsTypeName,
             schema: {
-              type: "object",
+              type: 'object',
               nullable: isQueryParamsNullable,
               properties: queryParameters?.reduce((prev, { name, schema, $ref, required: _required, description }) => {
                 return {
@@ -130,21 +102,20 @@ function generator(input: SwaggerJson, config: Config): { code: string; hooks: s
 
         const contentType = Object.keys(
           options.requestBody?.content ||
-            (options.requestBody?.$ref &&
-              input.components?.requestBodies?.[getRefName(options.requestBody.$ref as string)]?.content) || {
-              "application/json": null,
+            (options.requestBody?.$ref && input.components?.requestBodies?.[getRefName(options.requestBody.$ref as string)]?.content) || {
+              'application/json': null,
             },
-        )[0] as ApiAST["contentType"];
+        )[0] as ApiAST['contentType'];
 
         const accept = Object.keys(
           options.responses?.[200]?.content || {
-            "application/json": null,
+            'application/json': null,
           },
         )[0];
 
         const responses = getBodyContent(options.responses?.[200]);
 
-        let pathParamsRefString: string | undefined = pathParams.reduce((prev, { name }) => `${prev}${name},`, "");
+        let pathParamsRefString: string | undefined = pathParams.reduce((prev, { name }) => `${prev}${name},`, '');
         pathParamsRefString = pathParamsRefString ? `{${pathParamsRefString}}` : undefined;
 
         const additionalAxiosConfig = headerParams
@@ -180,7 +151,7 @@ function generator(input: SwaggerJson, config: Config): { code: string; hooks: s
           pathParamsRefString,
           endPoint,
           method: method as Method,
-          security: security ? getConstantName(JSON.stringify(security)) : "undefined",
+          security: security ? getConstantName(JSON.stringify(security)) : 'undefined',
           additionalAxiosConfig,
           queryParameters,
         });
@@ -224,12 +195,12 @@ function generator(input: SwaggerJson, config: Config): { code: string; hooks: s
     let code = generateApis(apis, types, config);
     code += generateConstants(constants);
     const type = generateTypes(types, config);
-    const hooks = config.reactHooks ? generateHook(apis, types, config) : "";
+    const hooks = config.reactHooks ? generateHook(apis, types, config) : '';
 
     return { code, hooks, type };
   } catch (error) {
     console.error({ error });
-    return { code: "", hooks: "", type: "" };
+    return { code: '', hooks: '', type: '' };
   }
 }
 
@@ -241,10 +212,10 @@ function getBodyContent(responses?: SwaggerResponse): Schema | undefined {
   return responses.content
     ? Object.values(responses.content)[0].schema
     : responses.$ref
-    ? ({
-        $ref: responses.$ref,
-      } as Schema)
-    : undefined;
+      ? ({
+          $ref: responses.$ref,
+        } as Schema)
+      : undefined;
 }
 
 export { generator };

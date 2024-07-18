@@ -1,0 +1,32 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`filterTree > should returns filtered tree 1`] = `
+[
+  {
+    "children": [
+      {
+        "children": [],
+        "id": "5",
+        "name": "sub-category-3",
+      },
+    ],
+    "id": "3",
+    "name": "sub-category-1",
+  },
+]
+`;
+
+exports[`filterTree > should returns filtered tree 2`] = `
+[
+  {
+    "children": [],
+    "id": "5",
+    "name": "sub-category-3",
+  },
+  {
+    "children": [],
+    "id": "4",
+    "name": "sub-category-2",
+  },
+]
+`;

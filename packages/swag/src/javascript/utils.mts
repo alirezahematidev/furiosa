@@ -1,17 +1,17 @@
-import { Schema, Parameter, Config } from "../types.mjs";
-import { getJsdoc } from "../utilities/jsdoc.mjs";
-import { isAscending } from "../utils.mjs";
+import { Schema, Parameter, Config } from '../types.mjs';
+import { getJsdoc } from '../utilities/jsdoc.mjs';
+import { isAscending } from '../utils.mjs';
 
 function getPathParams(parameters?: Parameter[]): Parameter[] {
   return (
     parameters?.filter(({ in: In }) => {
-      return In === "path";
+      return In === 'path';
     }) || []
   );
 }
 
 function getHeaderParams(parameters: Parameter[] | undefined, config: Config) {
-  const queryParamsArray = parameters?.filter(({ in: In }) => In === "header") || [];
+  const queryParamsArray = parameters?.filter(({ in: In }) => In === 'header') || [];
 
   const params = getObjectType(queryParamsArray, config);
 
@@ -28,18 +28,13 @@ function replaceWithUpper(str: string, sp: string) {
   let pointArray = str.split(sp);
   pointArray = pointArray.map((point) => toPascalCase(point));
 
-  return pointArray.join("");
+  return pointArray.join('');
 }
 
-function generateServiceName(
-  endPoint: string,
-  method: string,
-  operationId: string | undefined,
-  config: Config,
-): string {
-  const { prefix = "" } = config;
+function generateServiceName(endPoint: string, method: string, operationId: string | undefined, config: Config): string {
+  const { prefix = '' } = config;
 
-  const _endPoint = endPoint.replace(new RegExp(`^${prefix}`, "i"), "");
+  const _endPoint = endPoint.replace(new RegExp(`^${prefix}`, 'i'), '');
   const path = getSchemaName(_endPoint);
 
   const methodNameTemplate = getTemplate();
@@ -53,47 +48,35 @@ function generateServiceName(
 }
 
 function getTemplate() {
-  const defaultTemplate = "{method}{path}";
+  const defaultTemplate = '{method}{path}';
 
   return defaultTemplate;
 }
 
 const TYPES = {
-  integer: "number",
-  number: "number",
-  boolean: "boolean",
-  object: "object",
-  string: "string",
-  array: "array",
+  integer: 'number',
+  number: 'number',
+  boolean: 'boolean',
+  object: 'object',
+  string: 'string',
+  array: 'array',
 };
 
-function getDefineParam(
-  name: string,
-  required: boolean = false,
-  schema: Schema | undefined,
-  config: Config,
-  description?: string,
-): string {
+function getDefineParam(name: string, required: boolean = false, schema: Schema | undefined, config: Config, description?: string): string {
   return getParamString(name, required, getTsType(schema, config), description);
 }
 
-function getParamString(
-  name: string,
-  required: boolean = false,
-  type: string,
-  description?: string,
-  isPartial?: boolean,
-): string {
+function getParamString(name: string, required: boolean = false, type: string, description?: string, isPartial?: boolean): string {
   return `${getJsdoc({
     description,
-  })}${name}${required ? "" : "?"}: ${isPartial ? `Partial<${type}>` : type}`;
+  })}${name}${required ? '' : '?'}: ${isPartial ? `Partial<${type}>` : type}`;
 }
 function normalizeObjectPropertyNullable(propertyName: string, schema: Schema, required?: string[]) {
   if (schema.nullable !== undefined) {
     return schema.nullable;
   }
-  if (schema["x-nullable"] !== undefined) {
-    return schema["x-nullable"];
+  if (schema['x-nullable'] !== undefined) {
+    return schema['x-nullable'];
   }
   if (required) {
     return !required.includes(propertyName);
@@ -103,28 +86,28 @@ function normalizeObjectPropertyNullable(propertyName: string, schema: Schema, r
 
 function getTsType(schema: undefined | true | {} | Schema, config: Config): string {
   if (isTypeAny(schema)) {
-    return "any";
+    return 'any';
   }
 
   const { type, $ref, enum: Enum, items, properties, oneOf, additionalProperties, required, allOf } = schema as Schema;
 
   if ($ref) {
-    const refArray = $ref.split("/");
-    if (refArray[refArray.length - 2] === "requestBodies") {
+    const refArray = $ref.split('/');
+    if (refArray[refArray.length - 2] === 'requestBodies') {
       return `RequestBody${getRefName($ref)}`;
     } else {
       return getRefName($ref);
     }
   }
   if (Enum) {
-    return `${Enum.map((e) => JSON.stringify(e)).join(" | ")}`;
+    return `${Enum.map((e) => JSON.stringify(e)).join(' | ')}`;
   }
 
   if (items) {
     return `${getTsType(items, config)}[]`;
   }
 
-  let result = "";
+  let result = '';
 
   if (properties) {
     result += getObjectType(
@@ -140,19 +123,19 @@ function getTsType(schema: undefined | true | {} | Schema, config: Config): stri
   }
 
   if (oneOf) {
-    result = `${result} & (${oneOf.map((t) => `(${getTsType(t, config)})`).join(" | ")})`;
+    result = `${result} & (${oneOf.map((t) => `(${getTsType(t, config)})`).join(' | ')})`;
   }
 
   if (allOf) {
-    result = `${result} & (${allOf.map((_schema) => getTsType(_schema, config)).join(" & ")})`;
+    result = `${result} & (${allOf.map((_schema) => getTsType(_schema, config)).join(' & ')})`;
   }
 
-  if (type === "object" && !result) {
+  if (type === 'object' && !result) {
     if (additionalProperties) {
       return `{[x: string]: ${getTsType(additionalProperties, config)}}`;
     }
 
-    return "{[x in string | number ]: any}";
+    return '{[x in string | number ]: any}';
   }
 
   return result || TYPES[type as keyof typeof TYPES];
@@ -169,24 +152,18 @@ function getObjectType(parameter: { schema?: Schema; name: string }[], config: C
 
       return isAscending(name, _name);
     })
-    .reduce(
-      (
-        prev,
-        { schema: { deprecated, "x-deprecatedMessage": deprecatedMessage, example, nullable } = {}, schema, name },
-      ) => {
-        return `${prev}${getJsdoc({
-          ...schema,
-          deprecated: deprecated || deprecatedMessage ? deprecatedMessage : undefined,
-          example,
-        })}"${name}"${nullable ? "?" : ""}: ${getTsType(schema, config)};`;
-      },
-      "",
-    );
+    .reduce((prev, { schema: { deprecated, 'x-deprecatedMessage': deprecatedMessage, example, nullable } = {}, schema, name }) => {
+      return `${prev}${getJsdoc({
+        ...schema,
+        deprecated: deprecated || deprecatedMessage ? deprecatedMessage : undefined,
+        example,
+      })}"${name}"${nullable ? '?' : ''}: ${getTsType(schema, config)};`;
+    }, '');
 
-  return object ? `{${object}}` : "";
+  return object ? `{${object}}` : '';
 }
 function getSchemaName(name: string): string {
-  ["/", ".", "`", "[", "]", "-", "*", "{", "}"].forEach((str) => {
+  ['/', '.', '`', '[', ']', '-', '*', '{', '}'].forEach((str) => {
     name = replaceWithUpper(name, str);
   });
 
@@ -194,11 +171,11 @@ function getSchemaName(name: string): string {
 }
 
 function getRefName($ref: string): string {
-  const parts = $ref.split("/").pop();
-  return getSchemaName(parts || "");
+  const parts = $ref.split('/').pop();
+  return getSchemaName(parts || '');
 }
 
-function getParametersInfo(parameters: Parameter[] | undefined, type: "query" | "header") {
+function getParametersInfo(parameters: Parameter[] | undefined, type: 'query' | 'header') {
   const params =
     parameters?.filter(({ in: In }) => {
       return In === type;
@@ -222,7 +199,7 @@ function isTypeAny(type: true | undefined | {} | Schema) {
     return true;
   }
 
-  if (typeof type === "object" && Object.keys(type).length <= 0) {
+  if (typeof type === 'object' && Object.keys(type).length <= 0) {
     return true;
   }
 
@@ -236,11 +213,11 @@ function isTypeAny(type: true | undefined | {} | Schema) {
 /** Used to replace {name} in string with obj.name */
 function template(str: string, obj: { [x: string]: string } = {}) {
   Object.entries(obj).forEach(([key, value]) => {
-    const re = new RegExp(`{${key}}`, "i");
+    const re = new RegExp(`{${key}}`, 'i');
     str = str.replace(re, value);
   });
 
-  const re = new RegExp("{*}", "g");
+  const re = new RegExp('{*}', 'g');
   if (re.test(str)) {
     throw new Error(`methodName: Some A key is missed "${str}"`);
   }

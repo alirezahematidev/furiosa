@@ -1,8 +1,8 @@
-import { getTsType, getDefineParam, getParamString, getSchemaName } from "./utils.mjs";
-import { ApiAST, Config, TypeAST } from "../types.mjs";
-import { SERVICE_BEGINNING, SERVICE_NEEDED_FUNCTIONS, DEPRECATED_WARM_MESSAGE } from "./strings.mjs";
-import { getJsdoc } from "../utilities/jsdoc.mjs";
-import { isAscending, isMatchWholeWord } from "../utils.mjs";
+import { getTsType, getDefineParam, getParamString, getSchemaName } from './utils.mjs';
+import { ApiAST, Config, TypeAST } from '../types.mjs';
+import { SERVICE_BEGINNING, SERVICE_NEEDED_FUNCTIONS, DEPRECATED_WARM_MESSAGE } from './strings.mjs';
+import { getJsdoc } from '../utilities/jsdoc.mjs';
+import { isAscending, isMatchWholeWord } from '../utils.mjs';
 
 function generateApis(apis: ApiAST[], types: TypeAST[], config: Config): string {
   let code = SERVICE_BEGINNING;
@@ -40,20 +40,18 @@ ${getJsdoc({
 })}export const ${serviceName} = (
     ${
       /** Path parameters */
-      pathParams
-        .map(({ name, required, schema, description }) => getDefineParam(name, required, schema, config, description))
-        .join(",")
-    }${pathParams.length > 0 ? "," : ""}${
+      pathParams.map(({ name, required, schema, description }) => getDefineParam(name, required, schema, config, description)).join(',')
+    }${pathParams.length > 0 ? ',' : ''}${
       /** Request Body */
-      requestBody ? `${getDefineParam("requestBody", true, requestBody, config)},` : ""
+      requestBody ? `${getDefineParam('requestBody', true, requestBody, config)},` : ''
     }${
       /** Query parameters */
-      queryParamsTypeName ? `${getParamString("queryParams", !isQueryParamsNullable, queryParamsTypeName)},` : ""
+      queryParamsTypeName ? `${getParamString('queryParams', !isQueryParamsNullable, queryParamsTypeName)},` : ''
     }${
       /** Header parameters */
-      headerParams ? `${getParamString("headerParams", !isHeaderParamsNullable, headerParams as string)},` : ""
+      headerParams ? `${getParamString('headerParams', !isHeaderParamsNullable, headerParams as string)},` : ''
     }configOverride?:AxiosRequestConfig
-): Promise<SwaggerResponse<${responses ? getTsType(responses, config) : "any"}>> => {
+): Promise<SwaggerResponse<${responses ? getTsType(responses, config) : 'any'}>> => {
   ${
     deprecated
       ? `
@@ -63,19 +61,19 @@ ${getJsdoc({
       "${DEPRECATED_WARM_MESSAGE}",
     );
   }`
-      : ""
+      : ''
   }
   return Http.${method}Request(
     ${pathParamsRefString ? `template(${serviceName}.key,${pathParamsRefString})` : `${serviceName}.key`},
-    ${queryParamsTypeName ? "queryParams" : "undefined"},
+    ${queryParamsTypeName ? 'queryParams' : 'undefined'},
     ${
       requestBody
-        ? contentType === "multipart/form-data"
-          ? "objToForm(requestBody)"
-          : contentType === "application/x-www-form-urlencoded"
-          ? "objToUrlencoded(requestBody)"
-          : "requestBody"
-        : "undefined"
+        ? contentType === 'multipart/form-data'
+          ? 'objToForm(requestBody)'
+          : contentType === 'application/x-www-form-urlencoded'
+            ? 'objToUrlencoded(requestBody)'
+            : 'requestBody'
+        : 'undefined'
     },
     ${security},
     overrideConfig(${additionalAxiosConfig},
@@ -89,7 +87,7 @@ ${serviceName}.key = "${endPoint}";
 `
           );
         },
-        "",
+        '',
       );
 
     code +=
@@ -101,14 +99,14 @@ ${serviceName}.key = "${endPoint}";
         }
 
         return prev + ` ${name},`;
-      }, "import type {") + '}  from "./types"\n';
+      }, 'import type {') + '}  from "./types"\n';
 
     code += SERVICE_NEEDED_FUNCTIONS;
     code += apisCode;
     return code;
   } catch (error) {
     console.error(error);
-    return "";
+    return '';
   }
 }
 

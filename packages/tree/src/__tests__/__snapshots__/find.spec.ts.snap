@@ -1,0 +1,17 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`find > returns correct node for existing node in the tree 1`] = `
+{
+  "children": [],
+  "id": "4",
+  "name": "sub-category-2",
+}
+`;
+
+exports[`find > returns correct node for existing node in the tree deeper 1`] = `
+{
+  "children": [],
+  "id": "5",
+  "name": "sub-category-3",
+}
+`;

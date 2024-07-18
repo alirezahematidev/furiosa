@@ -1,0 +1,35 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`findParent > returns correct parent node for node with children 1`] = `
+{
+  "children": [
+    {
+      "children": [
+        {
+          "children": [],
+          "id": "5",
+          "name": "sub-category-3",
+        },
+      ],
+      "id": "3",
+      "name": "sub-category-1",
+    },
+  ],
+  "id": "1",
+  "name": "category-1",
+}
+`;
+
+exports[`findParent > returns correct parent node for node with children 2`] = `
+{
+  "children": [
+    {
+      "children": [],
+      "id": "4",
+      "name": "sub-category-2",
+    },
+  ],
+  "id": "2",
+  "name": "category-2",
+}
+`;

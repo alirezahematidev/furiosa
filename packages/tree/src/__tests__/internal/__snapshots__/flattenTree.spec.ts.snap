@@ -1,0 +1,31 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`flattenTree > should returns flat version of given tree data 1`] = `
+[
+  {
+    "id": "1",
+    "name": "category-1",
+    "parentId": null,
+  },
+  {
+    "id": "3",
+    "name": "sub-category-1",
+    "parentId": "1",
+  },
+  {
+    "id": "5",
+    "name": "sub-category-3",
+    "parentId": "3",
+  },
+  {
+    "id": "2",
+    "name": "category-2",
+    "parentId": null,
+  },
+  {
+    "id": "4",
+    "name": "sub-category-2",
+    "parentId": "2",
+  },
+]
+`;

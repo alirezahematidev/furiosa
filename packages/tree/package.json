@@ -1,0 +1,52 @@
+{
+  "name": "@furiosa/tree",
+  "version": "0.0.1",
+  "description": "A superpower tool to manage and handle nested tree data in typescript",
+  "main": "./dist/main.js",
+  "types": "./dist/main.d.ts",
+  "type": "module",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/main.d.ts",
+        "default": "./dist/main.js"
+      }
+    },
+    "./functions": {
+      "import": {
+        "types": "./dist/functions.d.ts",
+        "default": "./dist/functions.js"
+      }
+    }
+  },
+  "scripts": {
+    "test": "vitest run --no-isolate --config ./vitest.config.ts",
+    "build": "tsc --noEmit && tsup"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alirezahematidev/furiosa.git"
+  },
+  "keywords": [
+    "tree",
+    "category",
+    "hierarchy"
+  ],
+  "author": "Alireza Hemati",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/alirezahematidev/furiosa/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "homepage": "https://github.com/alirezahematidev/furiosa#readme",
+  "files": [
+    "dist"
+  ],
+  "devDependencies": {
+    "vitest": "^2.0.3",
+    "vite-tsconfig-paths": "^4.3.2",
+    "vite": "5.3.4"
+  }
+}

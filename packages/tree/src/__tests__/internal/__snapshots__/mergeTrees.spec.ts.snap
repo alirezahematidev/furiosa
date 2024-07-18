@@ -1,0 +1,108 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`mergeTrees > should returns the merged complex trees 1`] = `
+[
+  {
+    "children": [
+      {
+        "children": [
+          {
+            "children": [],
+            "id": "3",
+          },
+          {
+            "children": [],
+            "id": "4",
+          },
+          {
+            "children": [],
+            "id": "9",
+          },
+        ],
+        "id": "2",
+      },
+      {
+        "children": [],
+        "id": "5",
+      },
+      {
+        "children": [],
+        "id": "10",
+      },
+    ],
+    "id": "1",
+  },
+  {
+    "children": [
+      {
+        "children": [
+          {
+            "children": [],
+            "id": "8",
+          },
+        ],
+        "id": "7",
+      },
+      {
+        "children": [
+          {
+            "children": [],
+            "id": "12",
+          },
+        ],
+        "id": "11",
+      },
+    ],
+    "id": "6",
+  },
+  {
+    "children": [
+      {
+        "children": [],
+        "id": "14",
+      },
+    ],
+    "id": "13",
+  },
+]
+`;
+
+exports[`mergeTrees > should returns the merged trees 1`] = `
+[
+  {
+    "children": [
+      {
+        "children": [],
+        "id": "2",
+      },
+      {
+        "children": [],
+        "id": "3",
+      },
+      {
+        "children": [],
+        "id": "6",
+      },
+    ],
+    "id": "1",
+  },
+  {
+    "children": [
+      {
+        "children": [],
+        "id": "5",
+      },
+    ],
+    "id": "4",
+  },
+  {
+    "children": [
+      {
+        "children": [],
+        "id": "8",
+      },
+    ],
+    "id": "7",
+  },
+]
+`;

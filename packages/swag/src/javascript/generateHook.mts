@@ -1,10 +1,10 @@
-import { getTsType, getDefineParam, getParamString, toPascalCase, getSchemaName } from "./utils.mjs";
-import { ApiAST, Config, TypeAST } from "../types.mjs";
-import { DEPRECATED_WARM_MESSAGE, getHooksFunctions, getHooksImports } from "./strings.mjs";
-import { getJsdoc } from "../utilities/jsdoc.mjs";
-import { isAscending, isMatchWholeWord } from "../utils.mjs";
+import { getTsType, getDefineParam, getParamString, toPascalCase, getSchemaName } from './utils.mjs';
+import { ApiAST, Config, TypeAST } from '../types.mjs';
+import { DEPRECATED_WARM_MESSAGE, getHooksFunctions, getHooksImports } from './strings.mjs';
+import { getJsdoc } from '../utilities/jsdoc.mjs';
+import { isAscending, isMatchWholeWord } from '../utils.mjs';
 
-const allowedPageParametersNames = ["page", "pageno", "pagenumber", "offset"];
+const allowedPageParametersNames = ['page', 'pageno', 'pagenumber', 'offset'];
 
 function generateHook(apis: ApiAST[], types: TypeAST[], config: Config): string {
   let code = getHooksImports({
@@ -33,20 +33,12 @@ function generateHook(apis: ApiAST[], types: TypeAST[], config: Config): string 
       ) => {
         const hookName = `use${toPascalCase(serviceName)}`;
 
-        const hasPaging = config.useInfiniteQuery?.find(
-          (name) => name.toLowerCase() === serviceName.toLowerCase() || name.toLowerCase() === hookName.toLowerCase(),
-        );
+        const hasPaging = config.useInfiniteQuery?.find((name) => name.toLowerCase() === serviceName.toLowerCase() || name.toLowerCase() === hookName.toLowerCase());
 
         const isGet =
-          hasPaging ||
-          method === "get" ||
-          config.useQuery?.find(
-            (name) => name.toLowerCase() === serviceName.toLowerCase() || name.toLowerCase() === hookName.toLowerCase(),
-          );
-        const getParamsString = (override?: boolean) => ` ${
-          pathParams.length ? `${pathParams.map(({ name }) => name)},` : ""
-        }
-          ${requestBody ? "requestBody," : ""}
+          hasPaging || method === 'get' || config.useQuery?.find((name) => name.toLowerCase() === serviceName.toLowerCase() || name.toLowerCase() === hookName.toLowerCase());
+        const getParamsString = (override?: boolean) => ` ${pathParams.length ? `${pathParams.map(({ name }) => name)},` : ''}
+          ${requestBody ? 'requestBody,' : ''}
           ${
             queryParamsTypeName
               ? hasPaging && override
@@ -54,40 +46,36 @@ function generateHook(apis: ApiAST[], types: TypeAST[], config: Config): string 
                   ..._param,
                   ...queryParams,
                 },`
-                : "queryParams,"
-              : ""
+                : 'queryParams,'
+              : ''
           }
-          ${headerParams ? "headerParams," : ""}`;
+          ${headerParams ? 'headerParams,' : ''}`;
 
-        const TData = `${responses ? getTsType(responses, config) : "any"}`;
+        const TData = `${responses ? getTsType(responses, config) : 'any'}`;
         const TQueryFnData = `SwaggerResponse<${TData}>`;
-        const TError = "RequestError | Error";
+        const TError = 'RequestError | Error';
 
         const getQueryParamName = (name: string, nullable: boolean = isQueryParamsNullable, isPartial?: boolean) =>
-          queryParamsTypeName ? `${getParamString(name, !nullable, queryParamsTypeName, undefined, isPartial)},` : "";
+          queryParamsTypeName ? `${getParamString(name, !nullable, queryParamsTypeName, undefined, isPartial)},` : '';
 
         const TVariables = `${
           /** Path parameters */
-          pathParams
-            .map(({ name, required, schema, description }) =>
-              getDefineParam(name, required, schema, config, description),
-            )
-            .join(",")
-        }${pathParams.length > 0 ? "," : ""}${
+          pathParams.map(({ name, required, schema, description }) => getDefineParam(name, required, schema, config, description)).join(',')
+        }${pathParams.length > 0 ? ',' : ''}${
           /** Request Body */
-          requestBody ? `${getDefineParam("requestBody", true, requestBody, config)},` : ""
+          requestBody ? `${getDefineParam('requestBody', true, requestBody, config)},` : ''
         }${
           /** Query parameters */
-          getQueryParamName("queryParams")
+          getQueryParamName('queryParams')
         }${
           /** Header parameters */
-          headerParams ? `${getParamString("headerParams", !isHeaderParamsNullable, headerParams as string)},` : ""
+          headerParams ? `${getParamString('headerParams', !isHeaderParamsNullable, headerParams as string)},` : ''
         }`;
 
-        const deps = `[${serviceName}.key,${pathParams.length ? `${pathParams.map(({ name }) => name)},` : ""}
-            ${requestBody ? "requestBody," : ""}
-            ${queryParamsTypeName ? "queryParams," : ""}
-            ${headerParams ? "headerParams," : ""}]`;
+        const deps = `[${serviceName}.key,${pathParams.length ? `${pathParams.map(({ name }) => name)},` : ''}
+            ${requestBody ? 'requestBody,' : ''}
+            ${queryParamsTypeName ? 'queryParams,' : ''}
+            ${headerParams ? 'headerParams,' : ''}]`;
 
         let result: string =
           prev +
@@ -103,23 +91,19 @@ function generateHook(apis: ApiAST[], types: TypeAST[], config: Config): string 
         }
 
         const params = [
-          `${isGet ? TVariables : ""}`,
+          `${isGet ? TVariables : ''}`,
           `options?:${
             hasPaging
               ? `UseInfiniteQueryOptions<${TQueryFnData}, ${TError}>`
               : isGet
-              ? `SwaggerTypescriptUseQueryOptions<${TData}>`
-              : `${
-                  TVariables
-                    ? `SwaggerTypescriptUseMutationOptions<${TData}, {${TVariables}}, TExtra>`
-                    : `SwaggerTypescriptUseMutationOptionsVoid<${TData}, TExtra>`
-                }`
+                ? `SwaggerTypescriptUseQueryOptions<${TData}>`
+                : `${TVariables ? `SwaggerTypescriptUseMutationOptions<${TData}, {${TVariables}}, TExtra>` : `SwaggerTypescriptUseMutationOptionsVoid<${TData}, TExtra>`}`
           },`,
-          `${isGet ? `configOverride?:AxiosRequestConfig` : ""}`,
+          `${isGet ? `configOverride?:AxiosRequestConfig` : ''}`,
         ];
 
         result += ` (
-           ${params.join("")}
+           ${params.join('')}
            ) => {`;
         if (isGet) {
           result += `
@@ -134,8 +118,7 @@ function generateHook(apis: ApiAST[], types: TypeAST[], config: Config): string 
             queryKey:key,
             queryFn:({ pageParam }) =>
               fun({
-                  ${queryParameters.find(({ name }) => allowedPageParametersNames.includes(name.toLowerCase()))
-                    ?.name}:pageParam,
+                  ${queryParameters.find(({ name }) => allowedPageParametersNames.includes(name.toLowerCase()))?.name}:pageParam,
               }),
               initialPageParam: 1,
               getNextPageParam: (_lastPage, allPages) => allPages.length + 1,
@@ -176,10 +159,10 @@ function generateHook(apis: ApiAST[], types: TypeAST[], config: Config): string 
         `;
 
         if (isGet) {
-          result += `${hookName}.info = (${params.filter((param) => !param.startsWith("options?:")).join("")}) => {
+          result += `${hookName}.info = (${params.filter((param) => !param.startsWith('options?:')).join('')}) => {
               return {
                 key: ${deps} as QueryKey,
-                fun: (${hasPaging ? getQueryParamName("_param", true, true) : ""}) =>
+                fun: (${hasPaging ? getQueryParamName('_param', true, true) : ''}) =>
                 ${serviceName}(
                   ${getParamsString(true)}
                   configOverride
@@ -189,7 +172,7 @@ function generateHook(apis: ApiAST[], types: TypeAST[], config: Config): string 
 
           result += `${hookName}.prefetch = (
             client: QueryClient,
-            ${params.join("")}) => {
+            ${params.join('')}) => {
                 const { key, fun } = ${hookName}.info(${getParamsString()} configOverride);
 
                 return client.getQueryData(key)
@@ -206,7 +189,7 @@ function generateHook(apis: ApiAST[], types: TypeAST[], config: Config): string 
 
         return result;
       },
-      "",
+      '',
     );
 
     code +=
@@ -218,12 +201,12 @@ function generateHook(apis: ApiAST[], types: TypeAST[], config: Config): string 
             return prev;
           }
           return prev + ` ${name},`;
-        }, "import type {") + '}  from "./types"\n';
+        }, 'import type {') + '}  from "./types"\n';
 
     code +=
       apis.reduce((prev, { serviceName }) => {
         return prev + ` ${serviceName},`;
-      }, "import {") + '}  from "./services"\n';
+      }, 'import {') + '}  from "./services"\n';
 
     code += getHooksFunctions({
       hasInfinity: !!config.useInfiniteQuery?.length,
@@ -254,7 +237,7 @@ function generateHook(apis: ApiAST[], types: TypeAST[], config: Config): string 
     return code;
   } catch (error) {
     console.error(error);
-    return "";
+    return '';
   }
 }
 

@@ -1,17 +1,17 @@
-import { ConvertOutputOptions } from "swagger2openapi";
+import { ConvertOutputOptions } from 'swagger2openapi';
 
-type DataType = "string" | "number" | "integer" | "boolean" | "array" | "object";
+type DataType = 'string' | 'number' | 'integer' | 'boolean' | 'array' | 'object';
 
-export type OpenApiV2Document = ConvertOutputOptions["original"];
+export type OpenApiV2Document = ConvertOutputOptions['original'];
 
-export type OpenApiV3Document = ConvertOutputOptions["openapi"];
+export type OpenApiV3Document = ConvertOutputOptions['openapi'];
 
 export type OpenApiDocument = OpenApiV2Document | OpenApiV3Document;
 
 export interface Schema {
   title?: string;
   nullable?: boolean;
-  ["x-nullable"]?: boolean;
+  ['x-nullable']?: boolean;
   maxLength?: number;
   max?: number;
   min?: number;
@@ -19,27 +19,15 @@ export interface Schema {
   type?: DataType;
   items?: Schema | {};
 
-  format?:
-    | "int32"
-    | "int64"
-    | "float"
-    | "double"
-    | "byte"
-    | "binary"
-    | "date"
-    | "date-time"
-    | "date"
-    | "password"
-    | "guid"
-    | "uuid";
+  format?: 'int32' | 'int64' | 'float' | 'double' | 'byte' | 'binary' | 'date' | 'date-time' | 'date' | 'password' | 'guid' | 'uuid';
   additionalProperties?: Schema | true | {};
   properties?: { [name: string]: Schema };
   required?: string[];
   description?: string;
   example?: string;
   deprecated?: boolean;
-  "x-deprecatedMessage"?: string;
-  "x-enumNames"?: string[];
+  'x-deprecatedMessage'?: string;
+  'x-enumNames'?: string[];
   enum?: string[];
   $ref?: string;
   allOf?: Schema[];
@@ -87,7 +75,7 @@ export interface Schema {
 
 export type Parameter = {
   name: string;
-  in: "query" | "header" | "cookie" | "path";
+  in: 'query' | 'header' | 'cookie' | 'path';
   required?: boolean;
   schema?: Schema;
   $ref?: string;
@@ -100,8 +88,8 @@ export interface SwaggerResponse {
   description?: string;
   content?: Partial<
     Record<
-      ApiAST["contentType"],
-      Pick<Schema, "example" | "examples"> & {
+      ApiAST['contentType'],
+      Pick<Schema, 'example' | 'examples'> & {
         schema?: Schema;
       }
     >
@@ -197,25 +185,25 @@ export interface SwagConfig {
    *
    * @default typescript
    */
-  language?: "javascript" | "typescript";
+  language?: 'javascript' | 'typescript';
   /** Prefix value matched pathname will be removed from endpoints */
   prefix?: string;
 }
 
 export interface Config extends SwagConfig {}
 
-export type Method = "get" | "put" | "post" | "delete" | "options" | "head" | "patch" | "trace";
+export type Method = 'get' | 'put' | 'post' | 'delete' | 'options' | 'head' | 'patch' | 'trace';
 
 export type ApiAST = {
   contentType:
-    | "*/*"
-    | "text/json"
-    | "application/json"
-    | "application/octet-stream"
-    | "application/json-patch+json"
-    | "application/*+json"
-    | "multipart/form-data"
-    | "application/x-www-form-urlencoded";
+    | '*/*'
+    | 'text/json'
+    | 'application/json'
+    | 'application/octet-stream'
+    | 'application/json-patch+json'
+    | 'application/*+json'
+    | 'multipart/form-data'
+    | 'application/x-www-form-urlencoded';
 
   summary: string | undefined;
   deprecated: boolean | undefined;
@@ -241,20 +229,7 @@ export type TypeAST = {
   description?: string;
 };
 
-export type JsdocAST = Pick<
-  Schema,
-  | "min"
-  | "max"
-  | "title"
-  | "description"
-  | "format"
-  | "minimum"
-  | "maximum"
-  | "pattern"
-  | "maxLength"
-  | "minLength"
-  | "example"
-> & {
+export type JsdocAST = Pick<Schema, 'min' | 'max' | 'title' | 'description' | 'format' | 'minimum' | 'maximum' | 'pattern' | 'maxLength' | 'minLength' | 'example'> & {
   deprecated?: string;
 };
 

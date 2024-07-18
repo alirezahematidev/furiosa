@@ -1,5 +1,5 @@
-import { OpenApiV2Document, SwaggerJson } from "../types.mjs";
-import converter, { S2OError } from "swagger2openapi";
+import { OpenApiV2Document, SwaggerJson } from '../types.mjs';
+import converter, { S2OError } from 'swagger2openapi';
 
 function transformToOpenApi(input: OpenApiV2Document): Promise<SwaggerJson> {
   const options = { patch: true, warnOnly: true };

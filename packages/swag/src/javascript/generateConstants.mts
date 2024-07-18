@@ -1,5 +1,5 @@
-import type { ConstantsAST } from "../types.mjs";
-import { isAscending } from "../utils.mjs";
+import type { ConstantsAST } from '../types.mjs';
+import { isAscending } from '../utils.mjs';
 
 function generateConstants(types: ConstantsAST[]): string {
   try {
@@ -9,10 +9,10 @@ function generateConstants(types: ConstantsAST[]): string {
         prev += `export const ${name} = ${value};`;
 
         return prev;
-      }, "");
+      }, '');
   } catch (error) {
     console.error({ error });
-    return "";
+    return '';
   }
 }
 
