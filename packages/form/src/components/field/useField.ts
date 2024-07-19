@@ -12,43 +12,39 @@ function extractInternalProps<T extends TData, TPath extends DeepArrayPath<T>>(p
 }
 
 export function useField<T extends TData, TPath extends DeepArrayPath<T>>(props: FieldProps<T, TPath>) {
-  const { connect, name, bindTo, shouldUnregister, render } = props;
+  const { connect, name, linkTo, shouldUnregister, render } = props;
 
   const { _bridge, disconnect } = extractInternalProps(props);
 
   const innerRef = React.useRef<HTMLInputElement>(null);
 
+  const ref = useMergedRef(innerRef);
+
   const hook = React.useMemo(() => new Provider<T>(connect), [connect]);
 
-  const binding$ = useObservable(() => {
-    let binding = bindTo;
+  const isLinked = useObservable(() => {
+    let linking = linkTo;
 
-    if (_bridge) binding = (fields) => fields(name);
+    if (_bridge) linking = (fields) => fields(name);
 
-    return binding ? binding(hook.get) : false;
-  }, [bindTo, name, _bridge]);
-
-  const callbackRef = React.useCallback((node: HTMLInputElement) => {
-    if (!node) return;
-  }, []);
-
-  const ref = useMergedRef(innerRef, callbackRef);
+    return linking ? linking(hook.get) : false;
+  }, [linkTo, name, _bridge]);
 
   React.useEffect(() => {
-    const dispose = binding$.onChange(({ value }) => {
+    const dispose = isLinked.onChange(({ value }) => {
       if (typeof value !== 'boolean') return;
 
       hook[value ? 'unregister' : 'register'](name, _bridge || shouldUnregister);
     });
 
     return dispose;
-  }, [hook, name, _bridge, shouldUnregister, binding$]);
+  }, [hook, name, _bridge, shouldUnregister, isLinked]);
 
   const onChange = React.useCallback((event: any) => React.startTransition(() => hook.set(name, getEventValue(event))), [hook, name]);
 
   // render
 
-  if (binding$.get(true)) return NOOP;
+  if (isLinked.get(true)) return NOOP;
 
   return () => {
     const value = hook.get(name);

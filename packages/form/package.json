@@ -26,12 +26,6 @@
         "types": "./dist/components.d.ts",
         "default": "./dist/components.js"
       }
-    },
-    "./tools": {
-      "import": {
-        "types": "./dist/tools.d.ts",
-        "default": "./dist/tools.js"
-      }
     }
   },
   "keywords": [

@@ -57,13 +57,16 @@ export type GetValuesOptions = {
   tracking: boolean;
 };
 
-type IsTData<T> = T extends TData ? true : false;
+type PathPart<T> =
+  T extends Array<infer R>
+    ? R extends TData | undefined
+      ? NonNullable<PathPart<R>>
+      : never
+    : {
+        [K in keyof T]: K extends string ? (T[K] extends TData | undefined ? K | `${K}.${NonNullable<PathPart<T[K]>>}` : K) : never;
+      }[keyof T];
 
-type PathPart<T> = {
-  [K in keyof T]: K extends string ? (IsTData<T[K]> extends true ? OneOf<[K, `${K}.${Path<T[K]>}`]> : K) : never;
-}[keyof T];
-
-export type Path<T> = IsTData<T> extends true ? PathPart<T> : never;
+export type Path<T> = T extends TData | undefined ? PathPart<NonNullable<T>> : never;
 
 type SplitPath<P extends string> = P extends `${infer K}.${infer R}` ? [K, R] : P;
 
@@ -257,7 +260,7 @@ export type RenderOptions<T extends TData, TPath extends DeepArrayPath<T>> = {
 
 type NullishElement = React.JSX.Element | null | undefined;
 
-export type BindFunction<T extends TData> = (fields: FieldValues<T>) => boolean | Promise<boolean>;
+export type LinkFunction<T extends TData> = (fields: FieldValues<T>) => boolean | Promise<boolean>;
 
 interface BaseFieldProps<T extends TData, TPath extends DeepArrayPath<T>> {
   name: TPath;
@@ -267,7 +270,7 @@ interface BaseFieldProps<T extends TData, TPath extends DeepArrayPath<T>> {
 
 export interface FieldProps<T extends TData, TPath extends DeepArrayPath<T>> extends BaseFieldProps<T, TPath> {
   readonly connect: Connect<T>;
-  bindTo?: BindFunction<T>;
+  linkTo?: LinkFunction<T>;
   shouldUnregister?: boolean;
 }
 
