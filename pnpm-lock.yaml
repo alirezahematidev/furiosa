@@ -8,7 +8,6 @@ overrides:
   '@furiosa/form': workspace:*
   '@furiosa/swag': workspace:*
   '@furiosa/tree': workspace:*
-  '@furiosa/language': workspace:*
   '@furiosa/eslint-plugin-atomic': workspace:*
 
 importers:
@@ -76,12 +75,6 @@ importers:
       '@types/react-dom':
         specifier: ^18.2.22
         version: 18.3.0
-
-  packages/language:
-    dependencies:
-      '@legendapp/state':
-        specifier: 3.0.0-alpha.14
-        version: 3.0.0-alpha.14(react@18.3.1)
 
   packages/swag:
     dependencies:
