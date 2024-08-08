@@ -1,0 +1,39 @@
+{
+  "name": "@furiosa/auth",
+  "version": "0.0.0",
+  "type": "module",
+  "sideEffects": false,
+  "license": "MIT",
+  "description": "A lightweight observable form management powered by @legendapp/state",
+  "author": "Alireza Hemati",
+  "main": "./dist/main.js",
+  "types": "./dist/main.d.ts",
+  "keywords": [
+    "auth",
+    "axios",
+    "jwt"
+  ],
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc --noEmit && tsup"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alirezahematidev/furiosa.git"
+  },
+  "bugs": {
+    "url": "https://github.com/alirezahematidev/furiosa/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "homepage": "https://github.com/alirezahematidev/furiosa#readme",
+  "dependencies": {
+    "axios": "^1.7.3",
+    "@legendapp/state": "3.0.0-alpha.14",
+    "jose": "^5.6.3"
+  },
+  "devDependencies": {}
+}

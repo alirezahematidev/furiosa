@@ -13,6 +13,8 @@
     "build:form": "pnpm -r --filter='./packages/form' run build",
     "build:swag": "pnpm -r --filter='./packages/swag' run build",
     "build:tree": "pnpm -r --filter='./packages/tree' run build",
+    "build:auth": "pnpm -r --filter='./packages/auth' run build",
+    "dev:auth": "pnpm -r --filter='./examples/auth' run dev",
     "build:atomic": "pnpm -r --filter='./packages/eslint-plugin-atomic' run build",
     "build": "pnpm -r --parallel --filter='./packages/*' run build",
     "release": "pnpm build && tsx scripts/release.ts"
@@ -38,6 +40,7 @@
       "@furiosa/form": "workspace:*",
       "@furiosa/swag": "workspace:*",
       "@furiosa/tree": "workspace:*",
+      "@furiosa/auth": "workspace:*",
       "@furiosa/eslint-plugin-atomic": "workspace:*"
     }
   }
