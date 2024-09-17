@@ -21,14 +21,31 @@ describe('remove', async () => {
   });
 
   it('throws an error when parent node is not found', () => {
-    expect(() => fn([], '1')).toThrow(new Error('[Treekit:remove] Cannot found the node with the given id'));
-    expect(() => fn(data, '10')).toThrow(new Error('[Treekit:remove] Cannot found the node with the given id'));
+    expect(() => fn([], '1')(true)).toThrow(new Error('[Treekit:remove] Cannot found the node with the given id'));
+    expect(fn([], '1')(false)).toStrictEqual([]);
+
+    expect(() => fn(data, '10')(true)).toThrow(new Error('[Treekit:remove] Cannot found the node with the given id'));
+    expect(fn(data, '10')(false)).toStrictEqual(data);
   });
 
   it('removes the node from tree correctly', () => {
     const copy = [...data];
 
-    expect(fn(data, '1')).toStrictEqual([
+    expect(fn(data, '1')(true)).toStrictEqual([
+      {
+        id: '2',
+        name: 'category-2',
+        children: [
+          {
+            id: '4',
+            name: 'sub-category-2',
+            children: [],
+          },
+        ],
+      },
+    ]);
+
+    expect(fn(data, '1')(false)).toStrictEqual([
       {
         id: '2',
         name: 'category-2',
@@ -56,7 +73,7 @@ describe('remove', async () => {
           ],
         },
       ]);
-    });
+    })(true);
 
     expect(data).toStrictEqual(copy);
 
@@ -74,7 +91,7 @@ describe('remove', async () => {
       },
     ]);
 
-    expect(fn(data, '4')).toStrictEqual([
+    expect(fn(data, '4')(true)).toStrictEqual([
       {
         id: '1',
         name: 'category-1',
@@ -126,10 +143,11 @@ describe('remove', async () => {
       },
     ]);
 
-    expect(fn(data, '1')).toMatchSnapshot();
+    expect(fn(data, '1')(true)).toMatchSnapshot();
+    expect(fn(data, '1')(false)).toMatchSnapshot();
 
     fn(data, '1', (newTree) => {
       expect(newTree).toMatchSnapshot();
-    });
+    })(true);
   });
 });

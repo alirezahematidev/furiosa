@@ -23,19 +23,20 @@ describe('swap', async () => {
   it('throws an error when the node is not found', () => {
     const emptyTree: TreeNode[] = [];
 
-    expect(() => fn(emptyTree, '1', '2')).toThrow(new Error('[Treekit:swap] Cannot found the from/to node with the given ids.'));
-    expect(() => fn(data, '1', '10')).toThrow(new Error('[Treekit:swap] Cannot found the from/to node with the given ids.'));
+    expect(() => fn(emptyTree, '1', '2')(true)).toThrow(new Error('[Treekit:swap] Cannot found the from/to node with the given ids.'));
+    expect(fn(emptyTree, '1', '2')(false)).toStrictEqual(emptyTree);
+
+    expect(() => fn(data, '1', '10')(true)).toThrow(new Error('[Treekit:swap] Cannot found the from/to node with the given ids.'));
+    expect(fn(data, '1', '10')(false)).toStrictEqual(data);
   });
 
   it('throws an error when the node is descendant of the other', () => {
-    const fn = vi.fn<ActualParameters<TreeNode, 'swap'>>(swap);
-
-    expect(() => fn(data, '3', '5')).toThrow(new Error('[Treekit:swap] Nodes cannot be swapped as one is a descendant of the other.'));
-    expect(() => fn(data, '5', '3')).toThrow(new Error('[Treekit:swap] Nodes cannot be swapped as one is a descendant of the other.'));
+    expect(() => fn(data, '3', '5')(true)).toThrow(new Error('[Treekit:swap] Nodes cannot be swapped as one is a descendant of the other.'));
+    expect(fn(data, '5', '3')(false)).toStrictEqual(data);
   });
 
   it('returns updated tree data within the swapped nodes', () => {
-    expect(fn(data, '3', '4')).toStrictEqual([
+    expect(fn(data, '3', '4')(true)).toStrictEqual([
       {
         id: '1',
         name: 'category-1',
@@ -66,19 +67,21 @@ describe('swap', async () => {
       },
     ]);
 
-    expect(fn(data, '3', '4')).toMatchSnapshot();
+    expect(fn(data, '3', '4')(true)).toMatchSnapshot();
+    expect(fn(data, '3', '4')(false)).toMatchSnapshot();
 
     fn(data, '3', '4', (newTree) => {
       expect(newTree).toMatchSnapshot();
-    });
+    })(true);
   });
 
   it('returns original tree data when swapped node with itself', () => {
-    expect(fn(data, '3', '3')).toStrictEqual(data);
+    expect(fn(data, '3', '3')(true)).toStrictEqual(data);
+    expect(fn(data, '3', '3')(false)).toStrictEqual(data);
   });
 
   it('returns original tree data when swapped nodes in same depth', () => {
-    expect(fn(data, '1', '2')).toStrictEqual([
+    expect(fn(data, '1', '2')(true)).toStrictEqual([
       {
         id: '2',
         name: 'category-2',
@@ -109,10 +112,11 @@ describe('swap', async () => {
       },
     ]);
 
-    expect(fn(data, '1', '2')).toMatchSnapshot();
+    expect(fn(data, '1', '2')(true)).toMatchSnapshot();
+    expect(fn(data, '1', '2')(false)).toMatchSnapshot();
 
     fn(data, '1', '2', (newTree) => {
       expect(newTree).toMatchSnapshot();
-    });
+    })(true);
   });
 });

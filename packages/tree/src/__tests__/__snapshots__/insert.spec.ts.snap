@@ -43,6 +43,49 @@ exports[`insert > returns updated tree including the inserted array of nodes 1`]
 ]
 `;
 
+exports[`insert > returns updated tree including the inserted array of nodes 2`] = `
+[
+  {
+    "children": [
+      {
+        "children": [
+          {
+            "children": [],
+            "id": "5",
+            "name": "sub-category-3",
+          },
+        ],
+        "id": "3",
+        "name": "sub-category-1",
+      },
+    ],
+    "id": "1",
+    "name": "category-1",
+  },
+  {
+    "children": [
+      {
+        "children": [],
+        "id": "4",
+        "name": "sub-category-2",
+      },
+    ],
+    "id": "2",
+    "name": "category-2",
+  },
+  {
+    "children": [],
+    "id": "6",
+    "name": "sub-category-3",
+  },
+  {
+    "children": [],
+    "id": "7",
+    "name": "sub-category-3",
+  },
+]
+`;
+
 exports[`insert > returns updated tree including the inserted node 1`] = `
 [
   {
@@ -120,6 +163,44 @@ exports[`insert > returns updated tree including the inserted node 2`] = `
 `;
 
 exports[`insert > returns updated tree including the inserted node at first level of tree within null destId 1`] = `
+[
+  {
+    "children": [
+      {
+        "children": [
+          {
+            "children": [],
+            "id": "5",
+            "name": "sub-category-3",
+          },
+        ],
+        "id": "3",
+        "name": "sub-category-1",
+      },
+    ],
+    "id": "1",
+    "name": "category-1",
+  },
+  {
+    "children": [
+      {
+        "children": [],
+        "id": "4",
+        "name": "sub-category-2",
+      },
+    ],
+    "id": "2",
+    "name": "category-2",
+  },
+  {
+    "children": [],
+    "id": "6",
+    "name": "sub-category-root",
+  },
+]
+`;
+
+exports[`insert > returns updated tree including the inserted node at first level of tree within null destId 2`] = `
 [
   {
     "children": [

@@ -29,8 +29,11 @@ describe('insert', async () => {
       children: [],
     };
 
-    expect(() => fn(emptyTree, '3', node)).toThrow(new Error('[Treekit:insert] Cannot find the destination node with the given id.'));
-    expect(() => fn(emptyTree, '3', [node])).toThrow(new Error('[Treekit:insert] Cannot find the destination node with the given id.'));
+    expect(() => fn(emptyTree, '3', node)(true)).toThrow(new Error('[Treekit:insert] Cannot find the destination node with the given id.'));
+    expect(fn(emptyTree, '3', node)(false)).toStrictEqual(emptyTree);
+
+    expect(() => fn(emptyTree, '3', [node])(true)).toThrow(new Error('[Treekit:insert] Cannot find the destination node with the given id.'));
+    expect(fn(emptyTree, '3', [node])(false)).toStrictEqual(emptyTree);
   });
 
   it('returns updated tree including the inserted node at first level of tree within null destId', () => {
@@ -40,7 +43,7 @@ describe('insert', async () => {
       children: [],
     };
 
-    expect(fn(data, null, node)).toStrictEqual([
+    expect(fn(data, null, node)(true)).toStrictEqual([
       {
         id: '1',
         name: 'category-1',
@@ -76,7 +79,8 @@ describe('insert', async () => {
       },
     ]);
 
-    expect(fn(data, null, node)).toMatchSnapshot();
+    expect(fn(data, null, node)(true)).toMatchSnapshot();
+    expect(fn(data, null, node)(false)).toMatchSnapshot();
   });
 
   it('returns updated tree including the inserted array of nodes', () => {
@@ -93,7 +97,7 @@ describe('insert', async () => {
       },
     ];
 
-    expect(insert(data, '3', node)).toStrictEqual([
+    expect(insert(data, '3', node)(true)).toStrictEqual([
       {
         id: '1',
         name: 'category-1',
@@ -134,7 +138,8 @@ describe('insert', async () => {
       },
     ]);
 
-    expect(insert(data, null, node)).toMatchSnapshot();
+    expect(insert(data, null, node)(true)).toMatchSnapshot();
+    expect(insert(data, null, node)(false)).toMatchSnapshot();
   });
 
   it('returns updated tree including the inserted node', () => {
@@ -150,12 +155,13 @@ describe('insert', async () => {
       children: [],
     };
 
-    expect(fn(data, '3', node1)).toMatchSnapshot();
+    expect(fn(data, '3', node1)(true)).toMatchSnapshot();
 
-    expect(() => fn(data, '10', node2)).toThrow(new Error('[Treekit:insert] Cannot find the destination node with the given id.'));
+    expect(() => fn(data, '10', node2)(true)).toThrow(new Error('[Treekit:insert] Cannot find the destination node with the given id.'));
+    expect(fn(data, '10', node2)(false)).toStrictEqual(data);
 
     fn(data, '3', node2, (newTree) => {
       expect(newTree).toMatchSnapshot();
-    });
+    })(true);
   });
 });

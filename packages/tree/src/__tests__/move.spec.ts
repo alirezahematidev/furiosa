@@ -23,20 +23,28 @@ describe('move', async () => {
   it('throws an error when node is not found', () => {
     const emptyTree: TreeNode[] = [];
 
-    expect(() => fn(emptyTree, '1', null)).toThrow(new Error('[Treekit:move] Cannot found the source node with the given id'));
-    expect(() => fn(data, '10', null)).toThrow(new Error('[Treekit:move] Cannot found the source node with the given id'));
+    expect(() => fn(emptyTree, '1', null)(true)).toThrow(new Error('[Treekit:move] Cannot found the source node with the given id'));
+    expect(fn(emptyTree, '1', null)(false)).toStrictEqual(emptyTree);
+
+    expect(() => fn(data, '10', null)(true)).toThrow(new Error('[Treekit:move] Cannot found the source node with the given id'));
+    expect(fn(data, '10', null)(false)).toStrictEqual(data);
   });
 
   it('throws an error when try move node to its own descendants', () => {
     const fn = vi.fn<ActualParameters<TreeNode, 'move'>>(move);
 
-    expect(() => fn(data, '1', '3')).toThrow(new Error('[Treekit:move] Cannot move the node into its own descendants.'));
-    expect(() => fn(data, '1', '5')).toThrow(new Error('[Treekit:move] Cannot move the node into its own descendants.'));
-    expect(() => fn(data, '3', '5')).toThrow(new Error('[Treekit:move] Cannot move the node into its own descendants.'));
+    expect(() => fn(data, '1', '3')(true)).toThrow(new Error('[Treekit:move] Cannot move the node into its own descendants.'));
+    expect(fn(data, '1', '3')(false)).toStrictEqual(data);
+
+    expect(() => fn(data, '1', '5')(true)).toThrow(new Error('[Treekit:move] Cannot move the node into its own descendants.'));
+    expect(fn(data, '1', '5')(false)).toStrictEqual(data);
+
+    expect(() => fn(data, '3', '5')(true)).toThrow(new Error('[Treekit:move] Cannot move the node into its own descendants.'));
+    expect(fn(data, '3', '5')(false)).toStrictEqual(data);
   });
 
   it('moved nodeId:4 to nodeId:3 should', () => {
-    expect(fn(data, '4', '3')).toStrictEqual([
+    expect(fn(data, '4', '3')(true)).toStrictEqual([
       {
         id: '1',
         name: 'category-1',
@@ -66,15 +74,16 @@ describe('move', async () => {
       },
     ]);
 
-    expect(fn(data, '4', '3')).toMatchSnapshot();
+    expect(fn(data, '4', '3')(true)).toMatchSnapshot();
+    expect(fn(data, '4', '3')(false)).toMatchSnapshot();
 
     fn(data, '4', '3', (newTree) => {
       expect(newTree).toMatchSnapshot();
-    });
+    })(true);
   });
 
   it('moved nodeId:3 to nodeId:null (first level depth) should', () => {
-    expect(fn(data, '3', null)).toStrictEqual([
+    expect(fn(data, '3', null)(true)).toStrictEqual([
       {
         id: '1',
         name: 'category-1',
@@ -104,15 +113,18 @@ describe('move', async () => {
       },
     ]);
 
-    expect(fn(data, '3', null)).toMatchSnapshot();
+    expect(fn(data, '3', null)(true)).toMatchSnapshot();
+    expect(fn(data, '3', null)(false)).toMatchSnapshot();
 
     fn(data, '3', null, (newTree) => {
       expect(newTree).toMatchSnapshot();
-    });
+    })(true);
   });
 
   it('skip move processes if node moved to same dest', () => {
-    expect(fn(data, '3', '1')).toStrictEqual(data);
-    expect(fn(data, '2', null)).toStrictEqual(data);
+    expect(fn(data, '3', '1')(true)).toStrictEqual(data);
+    expect(fn(data, '3', '1')(false)).toStrictEqual(data);
+    expect(fn(data, '2', null)(true)).toStrictEqual(data);
+    expect(fn(data, '2', null)(false)).toStrictEqual(data);
   });
 });

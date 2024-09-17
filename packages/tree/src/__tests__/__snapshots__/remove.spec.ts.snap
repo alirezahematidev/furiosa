@@ -31,3 +31,19 @@ exports[`remove > removes the node from tree correctly 2`] = `
   },
 ]
 `;
+
+exports[`remove > removes the node from tree correctly 3`] = `
+[
+  {
+    "children": [
+      {
+        "children": [],
+        "id": "4",
+        "name": "sub-category-2",
+      },
+    ],
+    "id": "2",
+    "name": "category-2",
+  },
+]
+`;

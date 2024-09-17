@@ -66,6 +66,39 @@ exports[`swap > returns original tree data when swapped nodes in same depth 2`] 
 ]
 `;
 
+exports[`swap > returns original tree data when swapped nodes in same depth 3`] = `
+[
+  {
+    "children": [
+      {
+        "children": [],
+        "id": "4",
+        "name": "sub-category-2",
+      },
+    ],
+    "id": "2",
+    "name": "category-2",
+  },
+  {
+    "children": [
+      {
+        "children": [
+          {
+            "children": [],
+            "id": "5",
+            "name": "sub-category-3",
+          },
+        ],
+        "id": "3",
+        "name": "sub-category-1",
+      },
+    ],
+    "id": "1",
+    "name": "category-1",
+  },
+]
+`;
+
 exports[`swap > returns updated tree data within the swapped nodes 1`] = `
 [
   {
@@ -100,6 +133,39 @@ exports[`swap > returns updated tree data within the swapped nodes 1`] = `
 `;
 
 exports[`swap > returns updated tree data within the swapped nodes 2`] = `
+[
+  {
+    "children": [
+      {
+        "children": [],
+        "id": "4",
+        "name": "sub-category-2",
+      },
+    ],
+    "id": "1",
+    "name": "category-1",
+  },
+  {
+    "children": [
+      {
+        "children": [
+          {
+            "children": [],
+            "id": "5",
+            "name": "sub-category-3",
+          },
+        ],
+        "id": "3",
+        "name": "sub-category-1",
+      },
+    ],
+    "id": "2",
+    "name": "category-2",
+  },
+]
+`;
+
+exports[`swap > returns updated tree data within the swapped nodes 3`] = `
 [
   {
     "children": [

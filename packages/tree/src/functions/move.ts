@@ -1,34 +1,52 @@
 import { insert } from './insert';
 import { remove } from './remove';
-import { Callback, TreeNode } from '$core/index';
-import { assertion, containsNode, exception, findNode, findParent, nonUniqueTreeWarning } from '../helpers';
+import { ErrorCallback, CurryFn, TreeNode } from '$core/index';
+import { assertion, containsNode, error, exception, findNode, findParent, nonUniqueTreeWarning } from '../helpers';
 
-function move<T extends TreeNode>(tree: readonly T[], source: string, to: string | null): T[];
-function move<T extends TreeNode>(tree: readonly T[], source: string, to: string | null, callback: Callback<T>): void;
-function move<T extends TreeNode>(tree: readonly T[], source: string, to: string | null, callback?: Callback<T>) {
+function move<T extends TreeNode>(tree: readonly T[], source: string, to: string | null): CurryFn<T[]>;
+function move<T extends TreeNode>(tree: readonly T[], source: string, to: string | null, callback: ErrorCallback<T>): CurryFn<void>;
+function move<T extends TreeNode>(tree: readonly T[], source: string, to: string | null, callback?: ErrorCallback<T>) {
   assertion(tree);
 
   nonUniqueTreeWarning(tree, 'move');
 
-  const node = findNode(tree, source);
+  return (throwOnError?: boolean) => {
+    const node = findNode(tree, source);
 
-  if (containsNode(tree, source, to)) throw exception('move', 'Cannot move the node into its own descendants.');
+    if (containsNode(tree, source, to)) {
+      if (throwOnError) throw exception('move', 'Cannot move the node into its own descendants.');
 
-  if (!node) throw exception('move', 'Cannot found the source node with the given id');
+      error('move', 'Cannot move the node into its own descendants.');
 
-  const parentNode = findParent(tree, node);
+      if (callback) return void callback(tree, exception('move', 'Cannot move the node into its own descendants.'));
 
-  if (parentNode && parentNode.id === to) {
-    if (callback) return void callback(tree as T[]);
+      return [...tree];
+    }
 
-    return tree as T[];
-  }
+    if (!node) {
+      if (throwOnError) throw exception('move', 'Cannot found the source node with the given id');
 
-  const result = insert(remove(tree, source), to, node);
+      error('move', 'Cannot found the source node with the given id.');
 
-  if (callback) return void callback(result);
+      if (callback) return void callback(tree, exception('move', 'Cannot found the source node with the given id.'));
 
-  return result;
+      return [...tree];
+    }
+
+    const parentNode = findParent(tree, node);
+
+    if (parentNode && parentNode.id === to) {
+      if (callback) return void callback(tree, undefined);
+
+      return tree;
+    }
+
+    const result = insert(remove(tree, source)(throwOnError), to, node)(throwOnError);
+
+    if (callback) return void callback(result, undefined);
+
+    return result;
+  };
 }
 
 export { move };

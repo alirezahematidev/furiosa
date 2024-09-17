@@ -1,36 +1,46 @@
-import { Callback, TreeNode } from '$core/index';
-import { assertion, clone, exception, findNode, findParent, modifyWith, nonUniqueTreeWarning } from '../helpers';
+import { ErrorCallback, CurryFn, TreeNode } from '$core/index';
+import { assertion, clone, error, exception, findNode, findParent, modifyWith, nonUniqueTreeWarning } from '../helpers';
 
-function remove<T extends TreeNode>(tree: readonly T[], id: string): T[];
-function remove<T extends TreeNode>(tree: readonly T[], id: string, callback: Callback<T>): void;
-function remove<T extends TreeNode>(tree: readonly T[], id: string, callback?: Callback<T>) {
+function remove<T extends TreeNode>(tree: readonly T[], id: string): CurryFn<T[]>;
+function remove<T extends TreeNode>(tree: readonly T[], id: string, callback: ErrorCallback<T>): CurryFn<void>;
+function remove<T extends TreeNode>(tree: readonly T[], id: string, callback?: ErrorCallback<T>) {
   assertion(tree);
 
   nonUniqueTreeWarning(tree, 'remove');
 
-  const cloneTree = clone(tree);
+  return (throwOnError?: boolean) => {
+    const cloneTree = clone(tree);
 
-  const node = findNode(cloneTree, id);
+    const node = findNode(cloneTree, id);
 
-  if (!node) throw exception('remove', 'Cannot found the node with the given id');
+    if (!node) {
+      if (throwOnError) throw exception('remove', 'Cannot found the node with the given id');
 
-  const parentNode = findParent(cloneTree, node);
+      error('remove', 'Cannot found the node with the given id.');
 
-  if (!parentNode) {
-    modifyWith(cloneTree, node.id);
+      if (callback) return void callback(tree, exception('remove', 'Cannot found the node with the given id.'));
 
-    if (callback) return void callback(cloneTree);
+      return [...tree];
+    }
+
+    const parentNode = findParent(cloneTree, node);
+
+    if (!parentNode) {
+      modifyWith(cloneTree, node.id);
+
+      if (callback) return void callback(cloneTree, undefined);
+
+      return cloneTree;
+    }
+
+    if (!parentNode.children) parentNode.children = [];
+
+    modifyWith(parentNode.children, node.id);
+
+    if (callback) return void callback(cloneTree, undefined);
 
     return cloneTree;
-  }
-
-  if (!parentNode.children) parentNode.children = [];
-
-  modifyWith(parentNode.children, node.id);
-
-  if (callback) return void callback(cloneTree);
-
-  return cloneTree;
+  };
 }
 
 export { remove };

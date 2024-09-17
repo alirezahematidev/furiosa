@@ -21,8 +21,11 @@ describe('replace', async () => {
   });
 
   it('throws an error when node is not found', () => {
-    expect(() => fn([], '1', {})).toThrow(new Error('[Treekit:replace] Cannot found the target node with the given id'));
-    expect(() => fn(data, '10', {})).toThrow(new Error('[Treekit:replace] Cannot found the target node with the given id'));
+    expect(() => fn([], '1', {})(true)).toThrow(new Error('[Treekit:replace] Cannot found the target node with the given id'));
+    expect(fn([], '1', {})(false)).toStrictEqual([]);
+
+    expect(() => fn(data, '10', {})(true)).toThrow(new Error('[Treekit:replace] Cannot found the target node with the given id'));
+    expect(fn(data, '10', {})(false)).toStrictEqual(data);
   });
 
   it('returns updated tree within replaced node that has id', () => {
@@ -31,7 +34,7 @@ describe('replace', async () => {
         id: '10',
         name: 'new node',
         children: [],
-      }),
+      })(true),
     ).toStrictEqual([
       {
         id: '1',
@@ -68,7 +71,15 @@ describe('replace', async () => {
         id: '10',
         name: 'new node',
         children: [],
-      }),
+      })(true),
+    ).toMatchSnapshot();
+
+    expect(
+      fn(data, '5', {
+        id: '10',
+        name: 'new node',
+        children: [],
+      })(false),
     ).toMatchSnapshot();
 
     fn(
@@ -82,7 +93,7 @@ describe('replace', async () => {
       (newTree) => {
         expect(newTree).toMatchSnapshot();
       },
-    );
+    )(true);
   });
 
   it('returns updated tree within replaced node that has not id', () => {
@@ -90,7 +101,7 @@ describe('replace', async () => {
       fn(data, '5', {
         name: 'new node',
         children: [],
-      }),
+      })(true),
     ).toStrictEqual([
       {
         id: '1',
@@ -126,7 +137,14 @@ describe('replace', async () => {
       fn(data, '5', {
         name: 'new node',
         children: [],
-      }),
+      })(true),
+    ).toMatchSnapshot();
+
+    expect(
+      fn(data, '5', {
+        name: 'new node',
+        children: [],
+      })(false),
     ).toMatchSnapshot();
 
     fn(
@@ -139,7 +157,7 @@ describe('replace', async () => {
       (newTree) => {
         expect(newTree).toMatchSnapshot();
       },
-    );
+    )(true);
   });
 
   it('returns updated tree within replaced node that placed in first depth', () => {
@@ -148,7 +166,7 @@ describe('replace', async () => {
         id: '10',
         name: 'new node',
         children: [],
-      }),
+      })(true),
     ).toStrictEqual([
       {
         id: '10',
@@ -173,7 +191,15 @@ describe('replace', async () => {
         id: '10',
         name: 'new node',
         children: [],
-      }),
+      })(true),
+    ).toMatchSnapshot();
+
+    expect(
+      fn(data, '1', {
+        id: '10',
+        name: 'new node',
+        children: [],
+      })(false),
     ).toMatchSnapshot();
 
     fn(
@@ -187,6 +213,6 @@ describe('replace', async () => {
       (newTree) => {
         expect(newTree).toMatchSnapshot();
       },
-    );
+    )(true);
   });
 });
